@@ -79,3 +79,20 @@ rightTriangles = [(a, b, c) | c <- [1 .. 10], b <- [1 .. c], a <- [1 .. b], a ^ 
 
 rightTriangles' = [(a, b, c) | c <- [1 .. 10], b <- [1 .. c], a <- [1 .. b], a ^ 2 + b ^ 2 == c ^ 2, a + b + c == 24]
 
+--------------------------------------------------------------------------------
+------------------------- Ch. 3: Types and Typeclasses -------------------------
+--------------------------------------------------------------------------------
+removeNonUppercase :: [Char] -> [Char]
+removeNonUppercase st = [c | c <- st, c `elem` ['A' .. 'Z']]
+
+addThree :: Int -> Int -> Int -> Int
+addThree x y z = x + y + z
+
+-- Int, Integer, Float, Double, Bool, Char
+
+-- Type Variables --------------------------------------------------------------
+head' :: [a] -> a
+fst' :: (a, b) -> a
+-- Typeclasses 101 -------------------------------------------------------------
+-- Eq, Ord, Show, Read, Enum, Bounded, Num, Integral, Floating
+
