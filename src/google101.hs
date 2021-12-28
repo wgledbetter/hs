@@ -32,3 +32,22 @@ gcd' a b
   | otherwise = b
   where
     remAB = rem a b
+
+-- 02: Datatypes ---------------------------------------------------------------
+hours :: Minutes -> Int
+hours (Minutes mm) = div mm 60
+
+timeDistance :: Minutes -> Minutes -> Minutes
+timeDistance (Minutes mm1) (Minutes mm2)
+  | mm1 < mm2 = timeDistance (Minutes mm2) (Minutes mm1)
+  | otherwise = Minutes (mm1 - mm2)
+
+type Point = (Int, Int)
+
+pointDistance :: Point -> Point -> Double
+pointDistance p1 p2 = sqrt (fromIntegral (x2 - x1)) ^ 2 + fromIntegral (y2 - y1) ^ 2
+  where
+    x1 = fst p1
+    y1 = snd p1
+    x2 = fst p2
+    y2 = snd p2
