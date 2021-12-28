@@ -1,3 +1,5 @@
+import Prelude hiding (and, gcd, head, length, null, or, tail, (++))
+
 -- Data ------------------------------------------------------------------------
 data Minutes = Minutes Int
 
@@ -51,3 +53,40 @@ pointDistance p1 p2 = sqrt (fromIntegral (x2 - x1)) ^ 2 + fromIntegral (y2 - y1)
     y1 = snd p1
     x2 = fst p2
     y2 = snd p2
+
+-- 03: Lists -------------------------------------------------------------------
+null :: [a] -> Bool
+null [] = True
+null _ = False
+
+head :: [a] -> a
+head [] = error "head: empty list"
+head (x : _) = x
+
+tail :: [a] -> [a]
+tail [] = error "tail: empty list"
+tail (_ : xs) = xs
+
+length :: [a] -> Int
+length [] = 0
+length (x : xs) = 1 + length xs
+
+and :: [Bool] -> Bool
+and [] = error "and: empty list"
+and [x] = x
+and (x : xs)
+  | not x = False
+  | otherwise = and xs
+
+or :: [Bool] -> Bool
+or [] = error "or: empty list"
+or [x] = x
+or (x : xs)
+  | x = True
+  | otherwise = or xs
+
+(++) :: [a] -> [a] -> [a]
+[] ++ [] = []
+l1 ++ [] = l1
+[] ++ l2 = l2
+l1 ++ (y : ys) = snoc l1 y ++ ys
