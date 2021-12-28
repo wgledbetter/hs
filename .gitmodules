@@ -1,0 +1,3 @@
+[submodule "ref/haskell-trainings"]
+	path = ref/haskell-trainings
+	url = https://github.com/google/haskell-trainings.git
