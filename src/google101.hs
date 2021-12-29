@@ -1,4 +1,4 @@
-import Prelude hiding (and, gcd, head, length, null, or, tail, (++))
+import Prelude hiding (and, filter, foldl, foldr, gcd, head, length, map, null, or, tail, (++))
 
 -- Data ------------------------------------------------------------------------
 data Minutes = Minutes Int
@@ -90,3 +90,22 @@ or (x : xs)
 l1 ++ [] = l1
 [] ++ l2 = l2
 l1 ++ (y : ys) = snoc l1 y ++ ys
+
+-- 04: Abstractions ------------------------------------------------------------
+map :: (a -> b) -> [a] -> [b]
+map _ [] = []
+map f (a : as) = f a : map f as
+
+filter :: (a -> Bool) -> [a] -> [a]
+filter _ [] = []
+filter f (x : xs)
+  | f x = x : filter f xs
+  | otherwise = filter f xs
+
+foldl :: (a -> x -> a) -> a -> [x] -> a
+foldl _ a [] = a
+foldl f a (x : xs) = foldl f (f a x) xs
+
+foldr :: (x -> a -> a) -> a -> [x] -> a
+foldr _ a [] = a
+foldr f a (x : xs) = f x (foldr f a xs)
