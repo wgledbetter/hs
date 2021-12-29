@@ -109,3 +109,20 @@ foldl f a (x : xs) = foldl f (f a x) xs
 foldr :: (x -> a -> a) -> a -> [x] -> a
 foldr _ a [] = a
 foldr f a (x : xs) = f x (foldr f a xs)
+
+-- 05: Maybe -------------------------------------------------------------------
+safeHead :: [a] -> Maybe a
+safeHead [] = Nothing
+safeHead (x : _) = Just x
+
+isNothing :: Maybe a -> Bool
+isNothing (Just a) = True
+isNothing a = False
+
+fromMaybe :: a -> Maybe a -> a
+fromMaybe _ (Just a) = a
+fromMaybe a _ = a
+
+maybe :: b -> (a -> b) -> Maybe a -> b
+maybe _ f (Just a) = f a
+maybe b _ _ = b
