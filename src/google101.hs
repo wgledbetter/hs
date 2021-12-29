@@ -126,3 +126,35 @@ fromMaybe a _ = a
 maybe :: b -> (a -> b) -> Maybe a -> b
 maybe _ f (Just a) = f a
 maybe b _ _ = b
+
+-- 06: RPS ---------------------------------------------------------------------
+-- Givens:
+data Hand = Rock | Paper | Scissors deriving (Show, Read, Eq, Enum, Bounded)
+
+type Score = (Int, Int)
+
+winsOver :: Hand -> Hand -> Bool
+Rock `winsOver` Scissors = True
+Paper `winsOver` Rock = True
+Scissors `winsOver` Paper = True
+_ `winsOver` _ = False
+
+computeScore :: Hand -> Hand -> Score
+computeScore h1 h2
+  | h1 `winsOver` h2 = (1, 0)
+  | h2 `winsOver` h1 = (0, 1)
+  | otherwise = (0, 0)
+
+combine :: Score -> Score -> Score
+combine (a1, a2) (b1, b2) = (a1 + b1, a2 + b2)
+
+-- Problems:
+pairScore :: (Hand, Hand) -> Score
+pairScore (h1, h2) = computeScore h1 h2
+
+score :: [Hand] -> [Hand] -> Score
+score h1 h2 = foldl combine (0, 0) $ map pairScore $ zip h1 h2
+
+-- "mystic" is fibonnacci
+-- "valor" is primes
+-- "instinct" is sort (but I kind of cheated by having read LYAH)
