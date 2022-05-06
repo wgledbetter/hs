@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      HB.Two
       Lib
   other-modules:
       Paths_hs
