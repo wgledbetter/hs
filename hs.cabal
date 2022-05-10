@@ -25,6 +25,12 @@ source-repository head
 
 library
   exposed-modules:
+      FPPG.Four
+      FPPG.Three
+      FPPG.Two
+      HB.Five
+      HB.Four
+      HB.Three
       HB.Two
       Lib
   other-modules:
