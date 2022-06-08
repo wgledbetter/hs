@@ -21,6 +21,10 @@ description: Please see the README on GitHub at <https://github.com/githubuser/h
 
 dependencies:
   - base >= 4.7 && < 5
+  - template-haskell
+
+default-extensions:
+  - TemplateHaskell
 
 library:
   source-dirs: src
@@ -33,6 +37,7 @@ executables:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
+      - -XTemplateHaskell
     dependencies:
       - hs
 
@@ -45,6 +50,7 @@ executables:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
+      - -XTemplateHaskell
     dependencies:
       - hs
       - criterion
@@ -59,6 +65,7 @@ tests:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
+      - -XTemplateHaskell
     dependencies:
       - hs
       - tasty
