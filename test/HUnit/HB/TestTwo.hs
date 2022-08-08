@@ -2,6 +2,9 @@ module HUnit.HB.TestTwo where
 
 import HB.Two
   ( half,
+    parenOne,
+    parenThree,
+    parenTwo,
     square,
     twoFiveThree,
     twoFiveTwo,
@@ -60,5 +63,31 @@ testTwoSixOne =
   testCase
     "test solution to 2.6.1"
     $ assertBool
-      "parenthesis work like this"
+      "parentheses work like this"
       HB.Two.twoSixOneAnswer
+
+-- 2.11 ------------------------------------------------------------------------
+
+testParenOne :: Test.Tasty.Core.TestTree
+testParenOne =
+  testCase
+    "test solution to 2.11.1"
+    $ assertBool
+      "Parentheses work like this"
+      HB.Two.parenOne
+
+testParenTwo :: Test.Tasty.Core.TestTree
+testParenTwo =
+  testCase
+    "test solution to 2.11.2"
+    $ assertBool
+      "Parentheses work like this"
+      HB.Two.parenTwo
+
+testParenThree :: Test.Tasty.Core.TestTree
+testParenThree =
+  testCase
+    "test solution to 2.11.3"
+    $ assertBool
+      "Parentheses work like this"
+      HB.Two.parenThree

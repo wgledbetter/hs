@@ -30,5 +30,8 @@ unitTests =
       HUnit.HB.TestTwo.testSquare,
       HUnit.HB.TestTwo.testTwoFiveTwo,
       HUnit.HB.TestTwo.testTwoFiveThree,
-      HUnit.HB.TestTwo.testTwoSixOne
+      HUnit.HB.TestTwo.testTwoSixOne,
+      HUnit.HB.TestTwo.testParenOne,
+      HUnit.HB.TestTwo.testParenTwo,
+      HUnit.HB.TestTwo.testParenThree
     ]
