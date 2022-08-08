@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.5.
+-- This file has been generated from package.yaml by hpack version 0.34.7.
 --
 -- see: https://github.com/sol/hpack
 
@@ -34,6 +34,8 @@ library
       HB.Three
       HB.Two
       Lib
+      Scratch.BTH1
+      Scratch.BTH2
       Scratch.TTH1
       Scratch.TTH2
   other-modules:
@@ -51,6 +53,7 @@ executable hs-bench
   main-is: Bench.hs
   other-modules:
       HB.BenchTwo
+      Scratch.BenchBTH
       Scratch.BenchTTH
       FPPG.Four
       FPPG.Three
@@ -61,6 +64,8 @@ executable hs-bench
       HB.Three
       HB.Two
       Lib
+      Scratch.BTH1
+      Scratch.BTH2
       Scratch.TTH1
       Scratch.TTH2
       Paths_hs
@@ -107,6 +112,8 @@ test-suite hs-test
       HB.Three
       HB.Two
       Lib
+      Scratch.BTH1
+      Scratch.BTH2
       Scratch.TTH1
       Scratch.TTH2
       Paths_hs
