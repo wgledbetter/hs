@@ -51,6 +51,7 @@ executables:
       - -rtsopts
       - -with-rtsopts=-N
       - -XTemplateHaskell
+      - -O2
     dependencies:
       - hs
       - criterion

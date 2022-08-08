@@ -30,6 +30,7 @@ library
       FPPG.Two
       HB.Five
       HB.Four
+      HB.Six
       HB.Three
       HB.Two
       Lib
@@ -56,6 +57,7 @@ executable hs-bench
       FPPG.Two
       HB.Five
       HB.Four
+      HB.Six
       HB.Three
       HB.Two
       Lib
@@ -67,7 +69,7 @@ executable hs-bench
       src
   default-extensions:
       TemplateHaskell
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell -O2
   build-depends:
       base >=4.7 && <5
     , criterion
@@ -101,6 +103,7 @@ test-suite hs-test
       FPPG.Two
       HB.Five
       HB.Four
+      HB.Six
       HB.Three
       HB.Two
       Lib
