@@ -1,6 +1,6 @@
 -- Type Classes
 
-module HB.Six where
+module HB.Ch6 where
 
 -- The pattern where you derive from a typeclass which defines a set of
 -- functions but you only have to overload/define a subset of all funtions feels

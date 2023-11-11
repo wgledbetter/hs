@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.7.
+-- This file has been generated from package.yaml by hpack version 0.36.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -25,14 +25,14 @@ source-repository head
 
 library
   exposed-modules:
-      FPPG.Four
-      FPPG.Three
-      FPPG.Two
-      HB.Five
-      HB.Four
-      HB.Six
-      HB.Three
-      HB.Two
+      FPPG.Ch2
+      FPPG.Ch3
+      FPPG.Ch4
+      HB.Ch2
+      HB.Ch3
+      HB.Ch4
+      HB.Ch5
+      HB.Ch6
       Lib
       Scratch.BTH1
       Scratch.BTH2
@@ -52,17 +52,17 @@ library
 executable hs-bench
   main-is: Bench.hs
   other-modules:
-      HB.BenchTwo
+      HB.BenchCh2
       Scratch.BenchBTH
       Scratch.BenchTTH
-      FPPG.Four
-      FPPG.Three
-      FPPG.Two
-      HB.Five
-      HB.Four
-      HB.Six
-      HB.Three
-      HB.Two
+      FPPG.Ch2
+      FPPG.Ch3
+      FPPG.Ch4
+      HB.Ch2
+      HB.Ch3
+      HB.Ch4
+      HB.Ch5
+      HB.Ch6
       Lib
       Scratch.BTH1
       Scratch.BTH2
@@ -101,16 +101,16 @@ test-suite hs-test
   type: exitcode-stdio-1.0
   main-is: Test.hs
   other-modules:
-      HUnit.HB.TestTwo
+      HUnit.HB.TestCh2
       QuickCheck.HB.TestTwo
-      FPPG.Four
-      FPPG.Three
-      FPPG.Two
-      HB.Five
-      HB.Four
-      HB.Six
-      HB.Three
-      HB.Two
+      FPPG.Ch2
+      FPPG.Ch3
+      FPPG.Ch4
+      HB.Ch2
+      HB.Ch3
+      HB.Ch4
+      HB.Ch5
+      HB.Ch6
       Lib
       Scratch.BTH1
       Scratch.BTH2

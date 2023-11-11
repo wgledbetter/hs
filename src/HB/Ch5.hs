@@ -1,4 +1,4 @@
-module HB.Five where
+module HB.Ch5 where
 
 -- 5.3
 -- a-c

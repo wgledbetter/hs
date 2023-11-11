@@ -1,6 +1,6 @@
 -- Chapter 4: Basic Datatypes
 
-module HB.Four where
+module HB.Ch4 where
 
 data Mood = Blah | Woot
   deriving (Show)

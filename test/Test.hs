@@ -1,5 +1,5 @@
-import qualified HUnit.HB.TestTwo
-import qualified QuickCheck.HB.TestTwo
+import qualified HUnit.HB.TestCh2
+import qualified QuickCheck.HB.TestCh2
 import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck as QC
@@ -18,7 +18,7 @@ qcProps :: TestTree
 qcProps =
   testGroup
     "QuickCheck Tests"
-    [QuickCheck.HB.TestTwo.testTwoSixTwo]
+    [QuickCheck.HB.TestCh2.testTwoSixTwo]
 
 -- HUnit Unit Tests ------------------------------------------------------------
 
@@ -26,12 +26,12 @@ unitTests :: TestTree
 unitTests =
   testGroup
     "HUnit Tests"
-    [ HUnit.HB.TestTwo.testHalf,
-      HUnit.HB.TestTwo.testSquare,
-      HUnit.HB.TestTwo.testTwoFiveTwo,
-      HUnit.HB.TestTwo.testTwoFiveThree,
-      HUnit.HB.TestTwo.testTwoSixOne,
-      HUnit.HB.TestTwo.testParenOne,
-      HUnit.HB.TestTwo.testParenTwo,
-      HUnit.HB.TestTwo.testParenThree
+    [ HUnit.HB.TestCh2.testHalf,
+      HUnit.HB.TestCh2.testSquare,
+      HUnit.HB.TestCh2.testTwoFiveTwo,
+      HUnit.HB.TestCh2.testTwoFiveThree,
+      HUnit.HB.TestCh2.testTwoSixOne,
+      HUnit.HB.TestCh2.testParenOne,
+      HUnit.HB.TestCh2.testParenTwo,
+      HUnit.HB.TestCh2.testParenThree
     ]
