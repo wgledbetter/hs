@@ -33,6 +33,7 @@ library
       HB.Ch4
       HB.Ch5
       HB.Ch6
+      HB.Ch7
       Lib
       Scratch.BTH1
       Scratch.BTH2
@@ -63,6 +64,7 @@ executable hs-bench
       HB.Ch4
       HB.Ch5
       HB.Ch6
+      HB.Ch7
       Lib
       Scratch.BTH1
       Scratch.BTH2
@@ -111,6 +113,7 @@ test-suite hs-test
       HB.Ch4
       HB.Ch5
       HB.Ch6
+      HB.Ch7
       Lib
       Scratch.BTH1
       Scratch.BTH2
