@@ -1,12 +1,12 @@
-module HB.BenchCh2 where
+module HB.BenchCh02 where
 
 import Criterion.Main
-import HB.Ch2
+import HB.Ch02
 
 -- Full bench group ------------------------------------------------------------
 
-benchTwo = bgroup "HB/Ch2" [benchHalf]
+benchTwo = bgroup "HB/Ch02" [benchHalf]
 
 -- Individual tests ------------------------------------------------------------
 
-benchHalf = bench "Half of three" $ whnf HB.Ch2.half 3
+benchHalf = bench "Half of three" $ whnf HB.Ch02.half 3

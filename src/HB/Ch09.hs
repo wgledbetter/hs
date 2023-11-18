@@ -1,9 +1,9 @@
 -- Lists
 
-module HB.Ch9 where
+module HB.Ch09 where
 
 import Data.Char
-import HB.Ch7 (foldBool)
+import HB.Ch07 (foldBool)
 
 -- 9.4 -------------------------------------------------------------------------
 -- I have no idea what "cons cells" or "spines" are.
@@ -188,7 +188,7 @@ safe = take 7 gb
 -- 5b: [1,10,20]
 -- 5c: [15,15,15]
 -- 6:
-pb6 = map (\x -> HB.Ch7.foldBool x (-x) (x == 3))
+pb6 = map (\x -> HB.Ch07.foldBool x (-x) (x == 3))
 
 -- 9.10: Filters ---------------------------------------------------------------
 

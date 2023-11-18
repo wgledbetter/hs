@@ -1,6 +1,6 @@
 -- Recursion
 
-module HB.Ch8 where
+module HB.Ch08 where
 
 factorial :: Integer -> Integer
 factorial 0 = 1
@@ -17,9 +17,9 @@ applyTimesEx = (+ 1) ((+ 1) ((+ 1) ((+ 1) ((+ 1) (5)))))
 data Maybe a = Nothing | Just a
 
 -- We avoid "hitting bottom" from tho omission of a True case by changing the return type.
-sortaPartial :: Bool -> HB.Ch8.Maybe Int
-sortaPartial False = HB.Ch8.Just 0
-sortaPartial _ = HB.Ch8.Nothing
+sortaPartial :: Bool -> HB.Ch08.Maybe Int
+sortaPartial False = HB.Ch08.Just 0
+sortaPartial _ = HB.Ch08.Nothing
 
 -- 8.4: Fibonacci --------------------------------------------------------------
 

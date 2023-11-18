@@ -1,4 +1,4 @@
-module HB.Ch3 where
+module HB.Ch03 where
 
 main1 :: IO ()
 main1 = putStrLn "Hello there."

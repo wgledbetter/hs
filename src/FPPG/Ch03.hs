@@ -1,4 +1,4 @@
-module FPPG.Ch3 where
+module FPPG.Ch03 where
 
 -- 1
 oneA :: Bool

@@ -25,17 +25,18 @@ source-repository head
 
 library
   exposed-modules:
-      FPPG.Ch2
-      FPPG.Ch3
-      FPPG.Ch4
-      HB.Ch2
-      HB.Ch3
-      HB.Ch4
-      HB.Ch5
-      HB.Ch6
-      HB.Ch7
-      HB.Ch8
-      HB.Ch9
+      FPPG.Ch02
+      FPPG.Ch03
+      FPPG.Ch04
+      HB.Ch02
+      HB.Ch03
+      HB.Ch04
+      HB.Ch05
+      HB.Ch06
+      HB.Ch07
+      HB.Ch08
+      HB.Ch09
+      HB.Ch10
       Lib
       Scratch.BTH1
       Scratch.BTH2
@@ -55,20 +56,21 @@ library
 executable hs-bench
   main-is: Bench.hs
   other-modules:
-      HB.BenchCh2
+      HB.BenchCh02
       Scratch.BenchBTH
       Scratch.BenchTTH
-      FPPG.Ch2
-      FPPG.Ch3
-      FPPG.Ch4
-      HB.Ch2
-      HB.Ch3
-      HB.Ch4
-      HB.Ch5
-      HB.Ch6
-      HB.Ch7
-      HB.Ch8
-      HB.Ch9
+      FPPG.Ch02
+      FPPG.Ch03
+      FPPG.Ch04
+      HB.Ch02
+      HB.Ch03
+      HB.Ch04
+      HB.Ch05
+      HB.Ch06
+      HB.Ch07
+      HB.Ch08
+      HB.Ch09
+      HB.Ch10
       Lib
       Scratch.BTH1
       Scratch.BTH2
@@ -107,19 +109,20 @@ test-suite hs-test
   type: exitcode-stdio-1.0
   main-is: Test.hs
   other-modules:
-      HUnit.HB.TestCh2
-      QuickCheck.HB.TestTwo
-      FPPG.Ch2
-      FPPG.Ch3
-      FPPG.Ch4
-      HB.Ch2
-      HB.Ch3
-      HB.Ch4
-      HB.Ch5
-      HB.Ch6
-      HB.Ch7
-      HB.Ch8
-      HB.Ch9
+      HUnit.HB.TestCh02
+      QuickCheck.HB.TestCh02
+      FPPG.Ch02
+      FPPG.Ch03
+      FPPG.Ch04
+      HB.Ch02
+      HB.Ch03
+      HB.Ch04
+      HB.Ch05
+      HB.Ch06
+      HB.Ch07
+      HB.Ch08
+      HB.Ch09
+      HB.Ch10
       Lib
       Scratch.BTH1
       Scratch.BTH2

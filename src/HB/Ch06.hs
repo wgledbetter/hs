@@ -1,6 +1,6 @@
 -- Type Classes
 
-module HB.Ch6 where
+module HB.Ch06 where
 
 import Data.List (sort)
 

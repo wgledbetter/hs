@@ -1,4 +1,4 @@
-module FPPG.Ch4 where
+module FPPG.Ch04 where
 
 -- 1
 fDiffFwdDeriv :: (Fractional a) => a -> (a -> a) -> a -> a

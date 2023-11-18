@@ -1,6 +1,6 @@
 -- More Functional Patterns
 
-module HB.Ch7 where
+module HB.Ch07 where
 
 lam = (\x -> x * 5)
 

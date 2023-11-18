@@ -1,4 +1,4 @@
-module HB.Ch2 where
+module HB.Ch02 where
 
 import qualified GHC.Float
 import Prelude
