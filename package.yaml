@@ -57,6 +57,21 @@ executables:
       - hs
       - criterion
 
+  aoc2023:
+    main: Main.hs
+    source-dirs:
+      - AoC2023
+    ghc-options:
+      - -Wno-unsupported-llvm-version
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -XTemplateHaskell
+      - -fasm
+      - -O2
+    dependencies:
+      - hs
+
 tests:
   hs-test:
     main: Test.hs
