@@ -58,6 +58,7 @@ executable aoc2023
   main-is: Main.hs
   other-modules:
       Day01
+      Day02
       Paths_hs
   hs-source-dirs:
       AoC2023
