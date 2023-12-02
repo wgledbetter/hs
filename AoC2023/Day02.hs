@@ -1,11 +1,10 @@
 module Day02 where
 
-import System.IO
-
 import HB.Ch09 (splitAndDrop)
 import HB.Ch11 (capitalizeWord)
+import System.IO
 
--- Pure ------------------------------------------------------------------------
+-- Puz 1 -----------------------------------------------------------------------
 
 testInputGames =
   [ "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
@@ -81,6 +80,18 @@ sol cubeMaxes stringGames = sum validGameNums
     validGames = filter (gameIsPossible cubeMaxes) games
     validGameNums = map (\(Game gn _) -> gn) validGames
 
+-- Puz 2 -----------------------------------------------------------------------
+
+test2In = testInputGames
+
+test2Out = 2286
+
+cubePower :: (Cubes, Cubes, Cubes) -> Int
+cubePower (a, b, c) = (countCubes a) * (countCubes b) * (countCubes c)
+
+sol2 :: [String] -> Int
+sol2 = sum . (map (cubePower . maxCubes . parseGame))
+
 -- IO --------------------------------------------------------------------------
 
 cli :: IO ()
@@ -93,5 +104,6 @@ cli = do
   rawGames <- hGetContents gfHandle
   rawMaxes <- hGetContents mfHandle
   case (read puzNum) :: Int of
-    1 -> print $ sol ((read rawMaxes):: (Cubes,Cubes,Cubes)) (lines rawGames)
+    1 -> print $ sol ((read rawMaxes) :: (Cubes, Cubes, Cubes)) (lines rawGames)
+    2 -> print $ sol2 $ lines rawGames
     _ -> print "Invalid puzzle"
