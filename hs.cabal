@@ -37,6 +37,7 @@ library
       HB.Ch08
       HB.Ch09
       HB.Ch10
+      HB.Ch11
       Lib
       Scratch.BTH1
       Scratch.BTH2
@@ -90,6 +91,7 @@ executable hs-bench
       HB.Ch08
       HB.Ch09
       HB.Ch10
+      HB.Ch11
       Lib
       Scratch.BTH1
       Scratch.BTH2
@@ -101,7 +103,7 @@ executable hs-bench
       src
   default-extensions:
       TemplateHaskell
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell -O2
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell -O2 -fllvm
   build-depends:
       base >=4.7 && <5
     , criterion
@@ -118,7 +120,7 @@ executable hs-exe
       app
   default-extensions:
       TemplateHaskell
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell -fllvm -O2
   build-depends:
       base >=4.7 && <5
     , hs
@@ -144,6 +146,7 @@ test-suite hs-test
       HB.Ch08
       HB.Ch09
       HB.Ch10
+      HB.Ch11
       Lib
       Scratch.BTH1
       Scratch.BTH2

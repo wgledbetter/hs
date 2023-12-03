@@ -39,6 +39,8 @@ executables:
       - -rtsopts
       - -with-rtsopts=-N
       - -XTemplateHaskell
+      - -fllvm
+      - -O2
     dependencies:
       - hs
 
@@ -53,6 +55,7 @@ executables:
       - -with-rtsopts=-N
       - -XTemplateHaskell
       - -O2
+      - -fllvm
     dependencies:
       - hs
       - criterion
