@@ -61,6 +61,7 @@ executable aoc2023
   other-modules:
       Day01
       Day02
+      Day03
       Paths_hs
   hs-source-dirs:
       AoC2023

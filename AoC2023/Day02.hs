@@ -97,7 +97,7 @@ sol2 = sum . (map (cubePower . maxCubes . parseGame))
 cli :: IO ()
 cli = do
   putStrLn "Welcome to Day 02!"
-  putStrLn "Which puzzle would you like to solve? (1):"
+  putStrLn "Which puzzle would you like to solve? (1 or 2):"
   puzNum <- getLine
   gfHandle <- openFile "AoC2023/input/Day02-games.txt" ReadMode
   mfHandle <- openFile "AoC2023/input/Day02-maxes.txt" ReadMode
