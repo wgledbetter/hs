@@ -28,7 +28,7 @@ data Number = Number
   }
   deriving (Eq, Show)
 
-data Symbol = Symbol Int Int deriving (Eq, Show)
+data Symbol = Symbol Int Int Char deriving (Eq, Show)
 
 -- Find contiguous subsequence consisting of a set of values
 subseqsContaining :: (Eq a) => [a] -> [a] -> [(Int, Int)]
@@ -51,40 +51,38 @@ subseqsOfDigits = subseqsContaining "0123456789"
 
 getNumbers :: [String] -> [Number]
 getNumbers ll =
-  concat $
-    map
-      ( \(lineNum, theLine) ->
-          map
-            ( \(idx, sz) ->
-                Number {row = lineNum, col = idx, size = sz, value = read (take sz $ drop idx theLine)}
-            )
-            $ subseqsOfDigits theLine
-      )
-      $ zip (enumFrom 0) ll
+  concatMap
+    ( \(lineNum, theLine) ->
+        map
+          ( \(idx, sz) ->
+              Number {row = lineNum, col = idx, size = sz, value = read (take sz $ drop idx theLine)}
+          )
+          $ subseqsOfDigits theLine
+    )
+    (zip (enumFrom 0) ll)
 
 isSymbol :: Char -> Bool
 isSymbol = not . (flip contains ".0123456789")
 
 getSymbols :: [String] -> [Symbol]
 getSymbols ll =
-  concat $
-    map
-      ( \(lineNum, theLine) ->
-          foldr
-            ( \(colNum, theChar) theSymbols ->
-                if isSymbol theChar
-                  then Symbol lineNum colNum : theSymbols
-                  else theSymbols
-            )
-            []
-            (zip (enumFrom 0) theLine)
-      )
-      $ zip (enumFrom 0) ll
+  concatMap
+    ( \(lineNum, theLine) ->
+        foldr
+          ( \(colNum, theChar) theSymbols ->
+              if isSymbol theChar
+                then Symbol lineNum colNum theChar : theSymbols
+                else theSymbols
+          )
+          []
+          (zip (enumFrom 0) theLine)
+    )
+    (zip (enumFrom 0) ll)
 
 isAdjacent :: Symbol -> Number -> Bool
-isAdjacent (Symbol sr sc) (Number nr nc ns _) =
+isAdjacent (Symbol sr sc _) (Number nr nc ns _) =
   ((nr - 1) <= sr && sr <= (nr + 1)) -- Row is within 1
-    && ((nc - 1) <= sc && (sc <= (nc + ns + 1))) -- Col is within 1 of full size
+    && ((nc - 1) <= sc && (sc <= (nc + ns))) -- Col is within 1 of full size
 
 unique :: (Eq a) => [a] -> [a]
 unique = foldr (\item existing -> if contains item existing then existing else item : existing) []
