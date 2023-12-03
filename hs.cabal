@@ -38,6 +38,7 @@ library
       HB.Ch09
       HB.Ch10
       HB.Ch11
+      LC
       Lib
       Scratch.BTH1
       Scratch.BTH2
@@ -92,6 +93,7 @@ executable hs-bench
       HB.Ch09
       HB.Ch10
       HB.Ch11
+      LC
       Lib
       Scratch.BTH1
       Scratch.BTH2
@@ -147,12 +149,13 @@ test-suite hs-test
       HB.Ch09
       HB.Ch10
       HB.Ch11
+      LC
       Lib
       Scratch.BTH1
       Scratch.BTH2
       Scratch.TTH1
       Scratch.TTH2
-      Paths_hs
+      Paths_hs1
   hs-source-dirs:
       test
       src
