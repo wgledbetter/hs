@@ -1,5 +1,5 @@
 import Criterion.Main
-import HB.BenchTwo
+import HB.BenchCh02
 import Scratch.BenchBTH
 import Scratch.BenchTTH
 
