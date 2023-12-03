@@ -97,15 +97,59 @@ sol ll = sum (map value pns)
     ss = getSymbols ll
     pns = getPartNumbers nn ss
 
+-- Puz 2 -----------------------------------------------------------------------
+
+test2Input =
+  [ "467..114..",
+    "...*......",
+    "..35..633.",
+    "......#...",
+    "617*......",
+    ".....+.58.",
+    "..592.....",
+    "......755.",
+    "...$.*....",
+    ".664.598.."
+  ]
+
+test2Output = 467835
+
+data Gear = Gear Symbol Number Number deriving (Eq, Show)
+
+adjacentToSymbol :: Symbol -> [Number] -> [Number]
+adjacentToSymbol s = filter (\n -> isAdjacent s n)
+
+getGears :: [Symbol] -> [Number] -> [Gear]
+getGears [] _ = []
+getGears (s : ss) nn =
+  if numAdj == 2
+    then Gear s (adjNums !! 0) (adjNums !! 1) : rest
+    else rest
+  where
+    adjNums = adjacentToSymbol s nn
+    numAdj = length adjNums
+    rest = getGears ss nn
+
+gearRatio :: Gear -> Int
+gearRatio (Gear _ (Number _ _ _ v1) (Number _ _ _ v2)) = v1 * v2
+
+sol2 :: [String] -> Int
+sol2 ll = sum $ map gearRatio gg
+  where
+    ss = getSymbols ll
+    nn = getNumbers ll
+    gg = getGears ss nn
+
 -- IO --------------------------------------------------------------------------
 
 cli :: IO ()
 cli = do
   putStrLn "Welcome to Day 03!"
-  putStrLn "Which puzzle would you like to solve? (1):"
+  putStrLn "Which puzzle would you like to solve? (1 or 2):"
   puzNum <- getLine
   fHandle <- openFile "AoC2023/input/Day03.txt" ReadMode
   raw <- hGetContents fHandle
   case (read puzNum) :: Int of
     1 -> print $ sol $ lines raw
+    2 -> print $ sol2 $ lines raw
     _ -> print "Invalid puzzle"
