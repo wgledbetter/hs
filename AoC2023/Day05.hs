@@ -1,6 +1,6 @@
 module Day05 where
 
-import Data.List (sort)
+import Data.List (sort, sortBy)
 import Day03 (unique)
 import HB.Ch09 (splitAndDrop)
 import HB.Ch11 (contains)
@@ -87,7 +87,6 @@ performMap m@(Map ds ss r) i
 performMapGroup :: MapGroup -> Int -> Int
 performMapGroup ms i = if theMaps == [] then i else performMap (head theMaps) i
   where
-    sortedMaps = sort ms
     theMaps = filter (\m -> inputContains m i) ms
 
 applyAllMaps :: [MapGroup] -> Int -> Int
@@ -115,6 +114,104 @@ sol ss = minimum $ map (applyAllMaps mgs) seeds
   where
     (seeds, mgs) = parseInput ss
 
+-- Puz 2 -----------------------------------------------------------------------
+
+test2Output = 46
+
+type Range = (Int, Int)
+
+sortRanges :: [Range] -> [Range]
+sortRanges = sortBy (\(s1, _) (s2, _) -> compare s1 s2)
+
+simplifyRanges :: [Range] -> [Range]
+simplifyRanges rs = combine sorted
+  where
+    sorted = sortRanges rs
+    combine [] = []
+    combine (r : []) = [r]
+    combine (r1@(s1, l1) : r2@(s2, l2) : rr) =
+      if s1 + l1 >= s2
+        then combine ((s1, max (s1 + l1) (s2 + l2) - s1) : rr)
+        else r1 : combine (r2 : rr)
+
+rangeInputOf :: Map -> Range
+rangeInputOf (Map _ ss r) = (ss, r)
+
+rangeOverlap :: Range -> Range -> Maybe Range
+rangeOverlap r1@(s1, l1) r2@(s2, l2) = if l > 0 then Just (s, l) else Nothing
+  where
+    p1 = s1 + l1
+    p2 = s2 + l2
+    s = max s1 s2
+    l = min p1 p2 - s
+
+-- Portion of map input that overlaps with given range
+mapOverlap :: Map -> Range -> Maybe Range
+mapOverlap m = rangeOverlap (rangeInputOf m)
+
+-- Map the given range
+mapRange :: Map -> Range -> Range
+mapRange m r@(s, l) = (performMap m s, l)
+
+subRange :: Range -> Range -> [Range]
+subRange r1@(s1, l1) r2@(s2, l2)
+  | overlap == Nothing = [r1]
+  | otherwise = remove overlap r1
+  where
+    overlap = rangeOverlap r1 r2
+    remove (Just ov@(so, lo)) r@(s, l) =
+      if so == s -- If the overlap starts at the beginning
+        then
+          ( if lo == l -- If the overlap covers the whole range
+              then [] -- Nothing remains
+              else [(s + lo, l - lo)] -- The back portion remains
+          )
+        else
+          ( if so + lo == s + l -- If the overrlap covers the end
+              then [(s, l - lo)] -- Start is same, just shorter
+              else [(s, so - s), (so + lo, s + l - (so + lo))] -- Overlap is central
+          )
+
+-- Find maps that overlap
+-- Find individual ranges to pass to each map
+-- Simplify ranges
+groupMapRange :: MapGroup -> Range -> [Range]
+groupMapRange mg r@(s, l) = simplifyRanges $ notMapped ++ map (uncurry mapRange) validMaps
+  where
+    mapOverlapRange = map (\m -> (m, mapOverlap m r)) mg
+    validMaps =
+      map
+        (\(m, (Just mo)) -> (m, mo))
+        $ filter (\(m, mo) -> mo /= Nothing) mapOverlapRange
+    notMapped =
+      foldr
+        (\(_, ovl) ranges -> concat $ map (\r -> subRange r ovl) ranges)
+        [r]
+        validMaps
+
+applyAllRangeMapGroups :: [MapGroup] -> Range -> [Range]
+applyAllRangeMapGroups mgs r =
+  foldl
+    ( \rs mg ->
+        simplifyRanges $ concatMap (groupMapRange mg) rs
+    )
+    [r]
+    mgs
+
+toRanges :: [Int] -> [Range]
+toRanges [] = []
+toRanges (a : b : rest) = (a, b) : toRanges rest
+
+parseInput2 :: [String] -> ([Range], [MapGroup])
+parseInput2 ss = (toRanges seeds, mgs)
+  where
+    (seeds, mgs) = parseInput ss
+
+sol2 :: [String] -> Int
+sol2 ss = fst $ minimum $ concatMap (applyAllRangeMapGroups mgs) seedRanges
+  where
+    (seedRanges, mgs) = parseInput2 ss
+
 -- CLI -------------------------------------------------------------------------
 
 cli :: IO ()
@@ -126,4 +223,5 @@ cli = do
   raw <- hGetContents fHandle
   case (read puzNum) :: Int of
     1 -> print $ sol $ lines raw
+    2 -> print $ sol2 $ lines raw
     _ -> print "Invalid puzzle"
