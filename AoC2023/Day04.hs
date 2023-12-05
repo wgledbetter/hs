@@ -1,5 +1,7 @@
 module Day04 where
 
+import Data.List (sort)
+import Day03 (unique)
 import HB.Ch09 (splitAndDrop)
 import HB.Ch11 (contains)
 import System.IO
@@ -17,10 +19,13 @@ testInput =
 
 testOutput = 13
 
-data Card = Card [Int] [Int] deriving (Eq, Show)
+data Card = Card Int [Int] [Int] deriving (Eq, Show)
+
+instance Ord Card where
+  compare (Card c1 _ _) (Card c2 _ _) = compare c1 c2
 
 cardValue :: Card -> Int
-cardValue (Card winning have) =
+cardValue (Card _ winning have) =
   if length haveWinning > 0
     then 2 ^ (length haveWinning - 1)
     else 0
@@ -28,9 +33,11 @@ cardValue (Card winning have) =
     haveWinning = [x | x <- have, contains x winning]
 
 parseCard :: String -> Card
-parseCard cs = Card (map read winning) (map read have)
+parseCard cs = Card id (map read winning) (map read have)
   where
-    nums = splitAndDrop ':' cs !! 1
+    colonSplit = splitAndDrop ':' cs
+    id = read $ (words $ head colonSplit) !! 1 :: Int
+    nums = colonSplit !! 1
     splitNums = splitAndDrop '|' nums
     winning = words $ head splitNums
     have = words $ (splitNums !! 1)
@@ -38,15 +45,65 @@ parseCard cs = Card (map read winning) (map read have)
 sol :: [String] -> Int
 sol = sum . map (cardValue . parseCard)
 
+-- Puz 2 -----------------------------------------------------------------------
+
+test2Output = 30
+
+numWinning :: Card -> Int
+numWinning (Card _ winning have) = length [x | x <- have, contains x winning]
+
+cardNum :: Card -> Int
+cardNum (Card cn _ _) = cn
+
+getCardsByNum :: [Int] -> [Card] -> [Card]
+getCardsByNum [] _ = []
+getCardsByNum _ [] = []
+getCardsByNum nums cards =
+  unique $
+    foldr
+      (\card found -> if contains (cardNum card) nums then card : found else found)
+      []
+      cards
+
+-- This is intractibly slow
+getTotalCards :: [Card] -> [Card]
+getTotalCards [] = []
+getTotalCards unsortedCards =
+  if numThisWins > 0
+    then thisCard : getTotalCards (restCards ++ getCardsByNum (take numThisWins [cardNum thisCard + 1 ..]) restCards)
+    else thisCard : getTotalCards restCards -- Don't drop losers, just don't add more
+  where
+    (thisCard : restCards) = sort unsortedCards
+    numThisWins = numWinning thisCard
+
+getTotalCardCounts :: [Card] -> [(Int, Card)]
+getTotalCardCounts uncountedCards = go $ zip (repeat 1) uncountedCards
+  where
+    go [] = []
+    go ((thisCount, thisCard) : rest) =
+      (thisCount, thisCard)
+        : go
+          ((map (\(n, c) -> (n + thisCount, c)) $ take numThisWins rest) ++ drop numThisWins rest)
+      where
+        numThisWins = numWinning thisCard
+
+-- First attempt used the slow "getTotalCards"
+sol2 :: [String] -> Int
+sol2 = length . getTotalCards . map parseCard
+
+sol2' :: [String] -> Int
+sol2' = sum . map fst . getTotalCardCounts . map parseCard
+
 -- IO --------------------------------------------------------------------------
 
 cli :: IO ()
 cli = do
   putStrLn "Welcome to Day 04!"
-  putStrLn "Which puzzle would you like to solve? (1):"
+  putStrLn "Which puzzle would you like to solve? (1 or 2):"
   puzNum <- getLine
   fHandle <- openFile "AoC2023/input/Day04.txt" ReadMode
   raw <- hGetContents fHandle
   case (read puzNum) :: Int of
     1 -> print $ sol $ lines raw
+    2 -> print $ sol2' $ lines raw
     _ -> print "Invalid puzzle"
