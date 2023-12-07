@@ -43,3 +43,7 @@ Ans 2 = 35961505
 The quadratic formulation (numStrats') is waaaaaaaaaay faster than my list-based approach, but it's high by 2. Probably a floating-point thing.
 
 Yeah, just moved around where the `ceiling` and `floor` were placed.
+
+## Day 07
+
+Ans 1 = 250957639
