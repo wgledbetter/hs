@@ -38,3 +38,6 @@ $d_f = t_h(t_f-t_h)$
 where $d_f$ is the final distance, $t_h$ is the hold time,
 
 Ans 1 = 1155175
+Ans 2 = 35961505
+
+The quadratic formulation (numStrats') is waaaaaaaaaay faster than my list-based approach, but it's high by 2. Probably a floating-point thing.

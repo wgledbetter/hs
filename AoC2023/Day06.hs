@@ -10,6 +10,8 @@ testInput =
     "Distance:  9  40  200"
   ]
 
+testOutput = 288
+
 data Race = Race {raceTime :: Int, raceDistance :: Int} deriving (Eq, Show)
 
 parseRaces :: [String] -> [Race]
@@ -50,6 +52,22 @@ numStrats' r = maximumHold' r - minimumHold' r + 1
 sol :: [String] -> Int
 sol = (foldr (*) 1) . (map numStrats) . parseRaces
 
+-- Puz 2 -----------------------------------------------------------------------
+
+test2Output = 71503
+
+parseRace :: [String] -> Race
+parseRace ss = Race t d
+  where
+    timeStr = head ss
+    distStr = head $ drop 1 ss
+    t = (read . concat . words . last) $ splitAndDrop ':' timeStr :: Int
+    d = (read . concat . words . last) $ splitAndDrop ':' distStr :: Int
+
+-- Not the fastest thing ever, but the quadratic formulation (numStrats') gave me a wrong number on the test input...
+sol2 :: [String] -> Int
+sol2 = numStrats . parseRace
+
 -- IO --------------------------------------------------------------------------
 
 cli :: IO ()
@@ -61,4 +79,5 @@ cli = do
   raw <- hGetContents fHandle
   case (read puzNum) :: Int of
     1 -> print $ sol $ lines raw
+    2 -> print $ sol2 $ lines raw
     _ -> print "Invalid puzzle"
