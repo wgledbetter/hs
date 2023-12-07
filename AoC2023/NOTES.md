@@ -47,3 +47,11 @@ Yeah, just moved around where the `ceiling` and `floor` were placed.
 ## Day 07
 
 Ans 1 = 250957639
+
+### Puz 2
+
+Attempt 1 = 251371468 (too low)
+
+Ans = 251515496
+
+ick...
