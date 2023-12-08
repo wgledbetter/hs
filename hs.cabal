@@ -38,6 +38,7 @@ library
       HB.Ch09
       HB.Ch10
       HB.Ch11
+      HB.Ch12
       LC
       Lib
       Memo
@@ -100,6 +101,7 @@ executable hs-bench
       HB.Ch09
       HB.Ch10
       HB.Ch11
+      HB.Ch12
       LC
       Lib
       Memo
@@ -157,6 +159,7 @@ test-suite hs-test
       HB.Ch09
       HB.Ch10
       HB.Ch11
+      HB.Ch12
       LC
       Lib
       Memo
