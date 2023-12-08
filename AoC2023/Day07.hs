@@ -219,7 +219,7 @@ sol2 s = sum winnings
 cli :: IO ()
 cli = do
   putStrLn "Welcome to Day 07!"
-  putStrLn "Which puzzle would you like to solve (1)?"
+  putStrLn "Which puzzle would you like to solve (1 or 2)?"
   puzNum <- getLine
   fHandle <- openFile "AoC2023/input/Day07.txt" ReadMode
   raw <- hGetContents fHandle

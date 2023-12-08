@@ -55,3 +55,9 @@ Attempt 1 = 251371468 (too low)
 Ans = 251515496
 
 ick...
+
+## Day 08
+
+I literally was just doing binary tree unfolding stuff last night in the Haskell Book.
+
+Ans 1 = 21883
