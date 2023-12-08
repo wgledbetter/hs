@@ -40,6 +40,7 @@ library
       HB.Ch11
       LC
       Lib
+      Memo
       Scratch.BTH1
       Scratch.BTH2
       Scratch.TTH1
@@ -82,6 +83,7 @@ executable aoc2023
 executable hs-bench
   main-is: Bench.hs
   other-modules:
+      BenchMemo
       HB.BenchCh02
       Scratch.BenchBTH
       Scratch.BenchTTH
@@ -100,6 +102,7 @@ executable hs-bench
       HB.Ch11
       LC
       Lib
+      Memo
       Scratch.BTH1
       Scratch.BTH2
       Scratch.TTH1
@@ -110,7 +113,7 @@ executable hs-bench
       src
   default-extensions:
       TemplateHaskell
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell -O2 -fllvm
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell -O2 -fasm
   build-depends:
       base >=4.7 && <5
     , criterion
@@ -127,7 +130,7 @@ executable hs-exe
       app
   default-extensions:
       TemplateHaskell
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell -fllvm -O2
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell -fasm -O2
   build-depends:
       base >=4.7 && <5
     , hs
@@ -156,11 +159,12 @@ test-suite hs-test
       HB.Ch11
       LC
       Lib
+      Memo
       Scratch.BTH1
       Scratch.BTH2
       Scratch.TTH1
       Scratch.TTH2
-      Paths_hs1
+      Paths_hs
   hs-source-dirs:
       test
       src
