@@ -1,7 +1,7 @@
 module Day08 where
 
 import Data.List (find)
-import HB.Ch09 (splitAndDrop)
+import HB.Ch09 (isEmpty, splitAndDrop)
 import HB.Ch11 (BinaryTree (Leaf, Node), contains)
 import System.IO
 
@@ -73,15 +73,55 @@ sol ls = length $ pathTo "ZZZ" steps tree
     (steps, branches) = parseInput ls
     tree = unfoldTree "AAA" branches
 
+-- Puz 2 -----------------------------------------------------------------------
+
+test2Input =
+  [ "LR",
+    "",
+    "11A = (11B, XXX)",
+    "11B = (XXX, 11Z)",
+    "11Z = (11B, XXX)",
+    "22A = (22B, XXX)",
+    "22B = (22C, 22C)",
+    "22C = (22Z, 22Z)",
+    "22Z = (22B, 22B)",
+    "XXX = (XXX, XXX)"
+  ]
+
+test2Output = 6
+
+startNodes :: [String] -> [String]
+startNodes = filter (\s -> 'A' == last s)
+
+endNodes :: [String] -> [String]
+endNodes = filter (\s -> 'Z' == last s)
+
+transpose :: [[a]] -> [[a]]
+transpose ls =
+  if any isEmpty ls
+    then []
+    else map head ls : transpose (map (drop 1) ls)
+
+sol2 :: [String] -> Int
+sol2 ls = length pathsToAllZs
+  where
+    (steps, branches) = parseInput ls
+    nodes = map fst branches
+    trees = map (\startNode -> unfoldTree startNode branches) $ startNodes nodes -- A list of all trees beginning at each start node
+    paths = map (\t -> listifyWithSteps steps t) trees -- Listification of all trees using the given directions
+    pathSteps = transpose paths -- Regroup paths into individual steps
+    pathsToAllZs = takeWhile (\ps -> any (\p -> last p /= 'Z') ps) pathSteps -- Stop paths when everything ends in Z.
+
 -- IO --------------------------------------------------------------------------
 
 cli :: IO ()
 cli = do
   putStrLn "Welcome to Day 08!"
-  putStrLn "Which puzzle would you like to solve (1)?"
+  putStrLn "Which puzzle would you like to solve (1 or 2)?"
   puzNum <- getLine
   fHandle <- openFile "AoC2023/input/Day08.txt" ReadMode
   raw <- hGetContents fHandle
   case (read puzNum) :: Int of
     1 -> (print . sol . lines) raw
+    2 -> (print . sol2 . lines) raw
     _ -> print "Invalid puzzle"

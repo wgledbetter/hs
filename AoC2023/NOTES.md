@@ -61,3 +61,9 @@ ick...
 I literally was just doing binary tree unfolding stuff last night in the Haskell Book.
 
 Ans 1 = 21883
+
+### Puz 2
+
+Attempt 1 is sloooow.
+
+I need to have a way to find loops in the traversal, get the frequency of them, and then extend them out until multiple ones line up.
