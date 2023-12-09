@@ -113,3 +113,8 @@ Jesus.
 I feel like that one really required some background in cyclic graphs or whatever the fuck it's called.
 I'm confident my earlier attempts were logically correct; they were just computationally inefficient.
 In the end, I don't think I relied on any assumptions about the input structure, which is nice.
+
+Lastly, it feels good to read the haskell reddit post for today (_AFTER I SOLVED IT_) and see everyone else having frustrations with the same stuff.
+Saw some people recognize the same thing I did that the input structure is a simple sub-case of the general problem and were thinking about LCM/GCD-based solutions.
+I'm really happy with my algebra-based general solution though.
+Sick!

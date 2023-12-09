@@ -2,7 +2,7 @@ module Day08 where
 
 import Data.List (find)
 import HB.Ch09 (isEmpty, splitAndDrop)
-import HB.Ch11 (BinaryTree (Leaf, Node), contains)
+import HB.Ch11 (BinaryTree (Leaf, Node), contains, idxsOf)
 import System.IO
 
 -- Puz 1 -----------------------------------------------------------------------
