@@ -40,7 +40,7 @@ unfoldTree start branches = case generate start of
       Just (node, (l, r)) -> Just (l, node, r)
       Nothing -> Nothing
 
-listifyWithSteps :: String -> BinaryTree String -> [String]
+listifyWithSteps :: String -> BinaryTree a -> [a]
 listifyWithSteps steps tree = go (concat $ repeat steps) tree
   where
     go _ Leaf = []
@@ -49,7 +49,7 @@ listifyWithSteps steps tree = go (concat $ repeat steps) tree
       'R' -> c : go ss rt
       _ -> error $ "Incorrect direction indicator: " ++ [s]
 
-pathTo :: String -> String -> BinaryTree String -> [String]
+pathTo :: (Eq a) => a -> String -> BinaryTree a -> [a]
 pathTo end steps tree = takeWhile (/= end) $ listifyWithSteps steps tree
 
 parseBranch :: String -> (String, (String, String))
@@ -74,6 +74,8 @@ sol ls = length $ pathTo "ZZZ" steps tree
     tree = unfoldTree "AAA" branches
 
 -- Puz 2 -----------------------------------------------------------------------
+
+type Branch = (String, (String, String))
 
 test2Input =
   [ "LR",
@@ -102,6 +104,101 @@ transpose ls =
     then []
     else map head ls : transpose (map (drop 1) ls)
 
+connectionsToNode :: [Branch] -> String -> [(String, Char)]
+connectionsToNode branches node =
+  foldr
+    ( \(bNode, (bLeft, bRight)) l ->
+        let leftEq = bLeft == node
+            rightEq = bRight == node
+         in if leftEq && rightEq
+              then (bNode, 'L') : (bNode, 'R') : l
+              else
+                if leftEq
+                  then (bNode, 'L') : l
+                  else
+                    if rightEq
+                      then (bNode, 'R') : l
+                      else l
+    )
+    []
+    branches
+
+-- Find items that are on left and right of branch definition
+-- Return type is [(Node that cycles, (node that cycles to this node, direction from node))]
+cycles :: [Branch] -> [(String, [(String, Char)])]
+cycles branches =
+  map (\n -> (n, connectionsToNode branches n)) nodes
+  where
+    nodes = map fst branches
+
+beenHereBefore :: [(Int, Char, String)] -> [Bool]
+beenHereBefore l = False : go (take 1 l) (drop 1 l)
+  where
+    go already (x : xs) = (contains x already) : go (already ++ [x]) xs
+
+firstLoopOf :: String -> BinaryTree String -> [(Int, Char, String)]
+firstLoopOf steps tree = take (nUntilLoop + 1) idStepNode
+  where
+    stepList = listifyWithSteps steps tree
+    stepCounts = take (length steps) [0 ..]
+    idStepNode = zip3 (concat $ repeat stepCounts) (concat $ repeat steps) stepList
+    nUntilLoop = length $ takeWhile (== False) $ beenHereBefore idStepNode
+
+loopOffset :: [(Int, Char, String)] -> Int
+loopOffset loop = length $ takeWhile (/= last loop) loop
+
+loopLength :: [(Int, Char, String)] -> Int
+loopLength loop = (+) (-1) $ length $ drop (loopOffset loop) loop
+
+loopPattern :: (String -> Bool) -> [(Int, Char, String)] -> ([Int], [Int])
+loopPattern detect loop = (idxsOf True preLoopDetects, idxsOf True loopDetects)
+  where
+    nPreLoop = loopOffset loop
+    nLoop = loopLength loop
+    preLoopDetects = map (\(i, c, s) -> detect s) $ take nPreLoop loop
+    loopDetects = map (\(i, c, s) -> detect s) $ init $ drop nPreLoop loop
+
+occurancesOf :: (String -> Bool) -> String -> BinaryTree String -> [Int]
+occurancesOf detect steps tree =
+  preLoopIdxs ++ [lOff + lc * lLen + inLoopIdx | lc <- [0 ..], inLoopIdx <- inLoopIdxs]
+  where
+    loop = firstLoopOf steps tree
+    lOff = loopOffset loop
+    lLen = loopLength loop
+    (preLoopIdxs, inLoopIdxs) = loopPattern detect loop
+
+specialContains :: (Ord a) => a -> [a] -> Bool
+specialContains _ [] = False
+specialContains val (x : xs)
+  | val == x = True
+  | val < x = False
+  | otherwise = specialContains val xs
+
+lowestInAll :: (Ord a) => [[a]] -> a
+lowestInAll (l : ls) =
+  head $
+    filter
+      (\candidate -> all (\ll -> specialContains candidate ll) ls)
+      l
+
+-- bad name. does not generalize. relies on the fact that our condition happens to only occur once per loop.
+commonFrequency :: (Enum a, Ord a) => [a] -> [a] -> [a]
+commonFrequency l1 l2 = enumFromThen c1 c2
+  where
+    c1 = lowestInAll [l1, l2]
+    x1 = length $ takeWhile (<= c1) l1
+    x2 = length $ takeWhile (<= c1) l2
+    c2 = lowestInAll [drop x1 l1, drop x2 l2]
+
+lowestInAll' :: (Ord a, Enum a) => [[a]] -> a
+lowestInAll' (l : []) = head l
+lowestInAll' (l1 : l2 : ls) = lowestInAll' $ (commonFrequency l1 l2) : ls
+
+firstCommonOccurance :: (String -> Bool) -> String -> [BinaryTree String] -> Int
+firstCommonOccurance detect steps trees = lowestInAll occurances
+  where
+    occurances = map (\t -> occurancesOf detect steps t) trees
+
 sol2 :: [String] -> Int
 sol2 ls = length pathsToAllZs
   where
@@ -111,6 +208,13 @@ sol2 ls = length pathsToAllZs
     paths = map (\t -> listifyWithSteps steps t) trees -- Listification of all trees using the given directions
     pathSteps = transpose paths -- Regroup paths into individual steps
     pathsToAllZs = takeWhile (\ps -> any (\p -> last p /= 'Z') ps) pathSteps -- Stop paths when everything ends in Z.
+
+sol2' :: [String] -> Int
+sol2' ls = firstCommonOccurance (\s -> last s == 'Z') steps trees
+  where
+    (steps, branches) = parseInput ls
+    nodes = map fst branches
+    trees = map (\startNode -> unfoldTree startNode branches) $ startNodes nodes
 
 -- IO --------------------------------------------------------------------------
 
@@ -123,5 +227,5 @@ cli = do
   raw <- hGetContents fHandle
   case (read puzNum) :: Int of
     1 -> (print . sol . lines) raw
-    2 -> (print . sol2 . lines) raw
+    2 -> (print . sol2' . lines) raw
     _ -> print "Invalid puzzle"

@@ -67,3 +67,29 @@ Ans 1 = 21883
 Attempt 1 is sloooow.
 
 I need to have a way to find loops in the traversal, get the frequency of them, and then extend them out until multiple ones line up.
+
+When we're detecting looping, not only do we check if we're at the same node, we also have to see where we are in the LR instructions.
+Only when the node _and_ instruction index match does that indicate a loop.
+
+There are two parts to loops: pre-loop and loop.
+Any occurrances pre-loop can not be said to repeat periodically, but once you inter the loop, the further indices of that occurance will be (pL + lC*lS + lO), where pL is the pre-loop size, lC is the current loop count, lS is the size of the loop, and lO is the occurence's offset within the loop.
+
+New approach:
+Don't compare list contents.
+Generate one reference list and have use the generating equations for the others to determine candidacy.
+
+#### GHCI Commands
+
+```haskell
+sb = Day08.parseInput day08Input
+steps = fst sb
+branches = snd sb
+nodes = map fst branches
+trees = map (\startNode -> unfoldTree startNode branches) $ startNodes nodes
+loops = map (\t -> firstLoopOf steps t) trees
+lOffs = map loopOffset loops
+lLens = map loopLength loops
+lIdxs = map (loopPattern (\s -> last s == 'Z')) loops
+oos = map (\(lo, ll, (lip,lil)) -> lip ++ [lo + lc*ll + ili | lc <- [0..], ili <- lil]) $ zip3 lOffs lLens lIdxs
+
+```
