@@ -194,10 +194,42 @@ lowestInAll' :: (Ord a, Enum a) => [[a]] -> a
 lowestInAll' (l : []) = head l
 lowestInAll' (l1 : l2 : ls) = lowestInAll' $ (commonFrequency l1 l2) : ls
 
+-- Returns list of (b,m) such that idx = b + m*loopCount
+equationsOf :: (String -> Bool) -> String -> BinaryTree String -> [(Int, Int)]
+equationsOf detect steps tree = [(x, 0) | x <- preLoopIdxs] ++ [(lOff + x, lLen) | x <- inLoopIdxs]
+  where
+    loop = firstLoopOf steps tree
+    lOff = loopOffset loop
+    lLen = loopLength loop
+    (preLoopIdxs, inLoopIdxs) = loopPattern detect loop
+
+genFromEquation :: (Int, Int) -> [Int]
+genFromEquation (b, m) = [b + m * i | i <- [0 ..]]
+
+genFromEquations :: [(Int, Int)] -> [Int]
+genFromEquations eqs = [b + m * i | i <- [0 ..], (b, m) <- eqs]
+
+equationContains :: Int -> (Int, Int) -> Bool
+equationContains v (b, m) = rem (v - b) m == 0
+
+equationsContain :: Int -> [(Int, Int)] -> Bool
+equationsContain v eqs = any (\eq -> equationContains v eq) eqs
+
+lowestCommonInEqs :: [[(Int, Int)]] -> Int
+lowestCommonInEqs (eq : eqs) =
+  head $
+    filter (\candidate -> all (\e -> equationsContain candidate e) eqs) $
+      genFromEquations eq
+
 firstCommonOccurance :: (String -> Bool) -> String -> [BinaryTree String] -> Int
 firstCommonOccurance detect steps trees = lowestInAll occurances
   where
     occurances = map (\t -> occurancesOf detect steps t) trees
+
+firstCommonOccurance' :: (String -> Bool) -> String -> [BinaryTree String] -> Int
+firstCommonOccurance' detect steps trees = lowestCommonInEqs eqs
+  where
+    eqs = map (\t -> equationsOf detect steps t) trees
 
 sol2 :: [String] -> Int
 sol2 ls = length pathsToAllZs
@@ -210,7 +242,7 @@ sol2 ls = length pathsToAllZs
     pathsToAllZs = takeWhile (\ps -> any (\p -> last p /= 'Z') ps) pathSteps -- Stop paths when everything ends in Z.
 
 sol2' :: [String] -> Int
-sol2' ls = firstCommonOccurance (\s -> last s == 'Z') steps trees
+sol2' ls = firstCommonOccurance' (\s -> last s == 'Z') steps trees
   where
     (steps, branches) = parseInput ls
     nodes = map fst branches

@@ -91,5 +91,25 @@ lOffs = map loopOffset loops
 lLens = map loopLength loops
 lIdxs = map (loopPattern (\s -> last s == 'Z')) loops
 oos = map (\(lo, ll, (lip,lil)) -> lip ++ [lo + lc*ll + ili | lc <- [0..], ili <- lil]) $ zip3 lOffs lLens lIdxs
+```
+
+```haskell
+sb = Day08.parseInput day08Input
+steps = fst sb
+branches = snd sb
+nodes = map fst branches
+trees = map (\startNode -> unfoldTree startNode branches) $ startNodes nodes
+loops = map (\t -> firstLoopOf steps t) trees
+lOffs = map loopOffset loops
+lLens = map loopLength loops
+lIdxs = map (loopPattern (\s -> last s == 'Z')) loops
+eqs = map (\(lo, ll, (lip, lil)) -> [(x, 0) | x <- lip] ++ [(lo + x, ll) | x <- lil]) $ zip3 lOffs lLens lIdxs
 
 ```
+
+ANSWER 2 = 12833235391111
+WOOOOOOO!!!!!!!!!!!
+Jesus.
+I feel like that one really required some background in cyclic graphs or whatever the fuck it's called.
+I'm confident my earlier attempts were logically correct; they were just computationally inefficient.
+In the end, I don't think I relied on any assumptions about the input structure, which is nice.
