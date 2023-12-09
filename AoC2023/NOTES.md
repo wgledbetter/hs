@@ -118,3 +118,7 @@ Lastly, it feels good to read the haskell reddit post for today (_AFTER I SOLVED
 Saw some people recognize the same thing I did that the input structure is a simple sub-case of the general problem and were thinking about LCM/GCD-based solutions.
 I'm really happy with my algebra-based general solution though.
 Sick!
+
+## Day 09
+
+Felt super easy compared to yesterday.

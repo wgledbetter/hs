@@ -34,15 +34,33 @@ parseInput = map (\l -> map read $ words l)
 sol :: [String] -> Int
 sol = sum . (map nextInPattern) . parseInput
 
+-- Puz 2 -----------------------------------------------------------------------
+
+test2Output = 2
+
+stepBackSequencePattern :: [[Int]] -> [[Int]]
+stepBackSequencePattern (l : ls)
+  | all (== 0) l = [0 : l]
+  | otherwise = ((head l - (head . head) restStepped) : l) : restStepped
+  where
+    restStepped = stepBackSequencePattern ls
+
+previousInPattern :: [Int] -> Int
+previousInPattern = head . head . stepBackSequencePattern . sequencePattern
+
+sol2 :: [String] -> Int
+sol2 = sum . (map previousInPattern) . parseInput
+
 -- IO --------------------------------------------------------------------------
 
 cli :: IO ()
 cli = do
   putStrLn "Welcome to Day 09!"
-  putStrLn "Which puzzle would you like to solve (1)?"
+  putStrLn "Which puzzle would you like to solve (1 or 2)?"
   puzNum <- getLine
   fHandle <- openFile "AoC2023/input/Day09.txt" ReadMode
   raw <- hGetContents fHandle
   case (read puzNum) :: Int of
     1 -> (print . sol . lines) raw
+    2 -> (print . sol2 . lines) raw
     _ -> print "Invalid puzzle"
