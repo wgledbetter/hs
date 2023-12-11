@@ -64,15 +64,50 @@ sol universe = sum [distBetween a b | (i, a) <- zip [0 ..] galaxies, b <- drop (
     expandedUniverse = expand universe
     galaxies = findGalaxies expandedUniverse
 
+-- Puz 2 -----------------------------------------------------------------------
+
+testOutput2 = 1030
+
+testOutput3 = 8410
+
+expansionRows :: [[Char]] -> [Int]
+expansionRows u = map fst $ filter (\(rIdx, r) -> not $ contains '#' r) $ zip [0 ..] u
+
+expansionCols :: [[Char]] -> [Int]
+expansionCols u = map fst $ filter (\(cIdx, c) -> not $ contains '#' c) $ zip [0 ..] $ transpose u
+
+distBetween' :: [Int] -> [Int] -> Int -> (Int, Int) -> (Int, Int) -> Int
+distBetween' exRows exCols exFac a@(x1, y1) b@(x2, y2) = naiveDist + (exFac - 1) * (numExColsBetween + numExRowsBetween)
+  where
+    numExRowsBetween = length $ filter (\r -> r > min x1 x2 && r < max x1 x2) exRows
+    numExColsBetween = length $ filter (\c -> c > min y1 y2 && c < max y1 y2) exCols
+    naiveDist = distBetween a b
+
+subSol :: Int -> [String] -> Int
+subSol fac universe =
+  sum
+    [ distBetween' exRows exCols fac a b
+      | (i, a) <- zip [0 ..] galaxies,
+        b <- drop (i + 1) galaxies
+    ]
+  where
+    exRows = expansionRows universe
+    exCols = expansionCols universe
+    galaxies = findGalaxies universe
+
+sol2 :: [String] -> Int
+sol2 = subSol 1000000
+
 -- IO --------------------------------------------------------------------------
 
 cli :: IO ()
 cli = do
   putStrLn "Welcome to Day 11!"
-  putStrLn "Which puzzle would you like to solve (1)?"
+  putStrLn "Which puzzle would you like to solve (1 or 2)?"
   puzNum <- getLine
   fHandle <- openFile "AoC2023/input/Day11.txt" ReadMode
   raw <- hGetContents fHandle
   case (read puzNum) :: Int of
     1 -> (print . sol . lines) raw
+    2 -> (print . sol2 . lines) raw
     _ -> print "Invalid puzzle"
