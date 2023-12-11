@@ -122,3 +122,25 @@ Sick!
 ## Day 09
 
 Felt super easy compared to yesterday.
+
+## Day 10
+
+### Puz 2
+
+It's tricky because it's not the area inside the curve, it's the nodes inside the curve.
+I'm working on an incremental cross-product solution, but I'm not going to finish tonight.
+Actually, I don't think that'll work.
+
+New approach:
+
+- Find sub-rectangles
+- Calculate nodes within sub-rectangle
+  - What's "within" includes the opposite border.
+- Remove sub-square from path by connecting endpoints.
+
+Square detection occurs by considering three sides.
+If the first and third sides go in opposite directions, then you have a sub-square.
+Even if one side is longer.
+
+Nope.
+The right solution is to scan left to right on each row and count crossings.
