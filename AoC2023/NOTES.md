@@ -149,3 +149,13 @@ The right solution is to scan left to right on each row and count crossings.
 
 I'm going to write an inefficient approach and try to band-aid it by running it in parallel.
 Success!
+
+Yup, I knew part 2 was going to punish inefficient implementations.
+I don't have a better solution right now.
+I think the solution is to come up with a better mapping from a [Bool] permutation to an [Int] group for a given string.
+And there are probably more efficient data structures I should be using rather than lists of bool.
+I did initially think of making it an integer.
+It's okay.
+Maybe I'll come back to it later.
+
+I can't even get an answer for the test input in a reasonable amount of time... heh...
