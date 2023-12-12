@@ -74,6 +74,7 @@ executables:
       - -O2
     dependencies:
       - hs
+      - parallel
 
 tests:
   hs-test:

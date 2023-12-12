@@ -144,3 +144,8 @@ Even if one side is longer.
 
 Nope.
 The right solution is to scan left to right on each row and count crossings.
+
+## Day 12
+
+I'm going to write an inefficient approach and try to band-aid it by running it in parallel.
+Success!
