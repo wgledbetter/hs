@@ -65,7 +65,6 @@ executables:
     source-dirs:
       - AoC2023
     ghc-options:
-      - -Wno-unsupported-llvm-version
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
