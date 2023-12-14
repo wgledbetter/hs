@@ -174,3 +174,14 @@ Approach:
 
 - Find adjacent pairs in first row and column
 - Check if remaining rows and columns also have pair
+
+### Puz 2
+
+Guaranteed to have one smudge.
+Could be identified as follows:
+
+- All lists except one have an "ended" reflection.
+
+We _ONLY_ care about the newly-created reflection lines. I think.
+
+Yup!

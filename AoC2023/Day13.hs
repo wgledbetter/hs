@@ -2,7 +2,8 @@ module Day13 where
 
 import Data.List (sortBy)
 import Day08 (transpose)
-import HB.Ch09 (splitAndDrop)
+import HB.Ch09 (isEmpty, splitAndDrop)
+import HB.Ch11 (contains)
 import System.IO
 
 -- Puz 1 -----------------------------------------------------------------------
@@ -103,19 +104,78 @@ nBeforeRefl (x, y)
   | otherwise = nBeforeRefl (x + 1, y - 1)
 
 arrayValue :: (Eq a) => [[a]] -> Int
-arrayValue arr = rVal + cVal
-  where
-    rfls = arrayRefls arr
-    rr = rowRefls rfls
-    cr = colRefls rfls
-    rVal = foldr (\rf val -> val + 100 * nBeforeRefl rf) 0 rr
-    cVal = foldr (\rf val -> val + nBeforeRefl rf) 0 cr
+arrayValue = reflValue . arrayRefls
 
 parseInput :: [String] -> [[String]]
 parseInput = splitAndDrop ""
 
 sol :: [String] -> Int
 sol = sum . (map arrayValue) . parseInput
+
+-- Puz 2 -----------------------------------------------------------------------
+
+intersection' :: (Eq a) => [a] -> [a] -> [a]
+intersection' l1 = foldr (\l2Item accum -> if contains l2Item l1 then l2Item : accum else accum) []
+
+intersection :: (Eq a) => [[a]] -> [a]
+intersection (l : []) = l
+intersection (l1 : l2 : []) = intersection' l1 l2
+intersection (l : ls) = intersection (l : [intersection ls])
+
+everyoneElseHas :: (Eq a) => [a] -> [[a]] -> [a]
+everyoneElseHas lRef ee =
+  foldr
+    (\allOthersItem accum -> if contains allOthersItem lRef then accum else allOthersItem : accum)
+    []
+    $ intersection ee
+
+dropVal :: (Eq a) => a -> [a] -> [a]
+dropVal _ [] = []
+dropVal v (x : xs) = if v == x then dropVal v xs else x : dropVal v xs
+
+dropIdx :: Int -> [a] -> [a]
+dropIdx 0 (l : ls) = ls
+dropIdx n (x : xs) = x : dropIdx (n - 1) xs
+
+maybeHead :: [a] -> Maybe a
+maybeHead [] = Nothing
+maybeHead (x : xs) = Just x
+
+-- Find the index of the list that doesn't have something that everyone else has.
+-- STRONG ASSUMPTION THAT:
+--   1. Only one list will have uncommon values
+--   2. Only one thing will be uncommon in that list
+findUncommon :: (Eq a) => [[a]] -> (Int, Maybe a)
+findUncommon lists = case maybeUncommon of
+  Just (id, unComList) -> (id, maybeHead unComList)
+  Nothing -> (0, Nothing)
+  where
+    eeh = map (\(id, l) -> (id, everyoneElseHas l (dropIdx id lists))) $ zip [0 ..] lists
+    maybeUncommon = maybeHead $ filter (\(id, l) -> not $ isEmpty l) eeh
+
+allEndedRefls :: (Eq a) => [[a]] -> [[(Int, Int)]]
+allEndedRefls = map reflsWithEnd
+
+reflValue :: ArrayRefls -> Int
+reflValue (ArrayRefls rr cr) = rVal + cVal
+  where
+    rVal = foldr (\rf val -> val + 100 * nBeforeRefl rf) 0 rr
+    cVal = foldr (\rf val -> val + nBeforeRefl rf) 0 cr
+
+unMaybeToList :: Maybe a -> [a]
+unMaybeToList ml = case ml of
+  Just x -> [x]
+  Nothing -> []
+
+unSmudgedValue :: (Eq a) => [[a]] -> Int
+unSmudgedValue arr = reflValue smudgeFixes
+  where
+    (_, maybeColUnc) = findUncommon $ allEndedRefls arr
+    (_, maybeRowUnc) = findUncommon $ allEndedRefls $ transpose arr
+    smudgeFixes = ArrayRefls {rowRefls = unMaybeToList maybeRowUnc, colRefls = unMaybeToList maybeColUnc}
+
+sol2 :: [String] -> Int
+sol2 = sum . (map unSmudgedValue) . parseInput
 
 -- IO --------------------------------------------------------------------------
 
@@ -128,4 +188,5 @@ cli = do
   raw <- hGetContents fHandle
   case read puzNum :: Int of
     1 -> (print . sol . lines) raw
+    2 -> (print . sol2 . lines) raw
     _ -> print "Invalid puzzle."
