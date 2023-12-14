@@ -73,12 +73,13 @@ executable aoc2023
       Day10
       Day11
       Day12
+      Day13
       Paths_hs
   hs-source-dirs:
       AoC2023
   default-extensions:
       TemplateHaskell
-  ghc-options: -Wno-unsupported-llvm-version -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell -fasm -O2
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -XTemplateHaskell -fasm -O2
   build-depends:
       base >=4.7 && <5
     , hs

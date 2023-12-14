@@ -12,6 +12,7 @@ import Day09 (cli)
 import Day10 (cli)
 import Day11 (cli)
 import Day12 (cli)
+import Day13 (cli)
 
 main :: IO ()
 main = do
@@ -30,4 +31,5 @@ main = do
     10 -> Day10.cli
     11 -> Day11.cli
     12 -> Day12.cli
+    13 -> Day13.cli
     _ -> print "Invalid Day."

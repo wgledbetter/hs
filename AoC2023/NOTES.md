@@ -159,3 +159,18 @@ It's okay.
 Maybe I'll come back to it later.
 
 I can't even get an answer for the test input in a reasonable amount of time... heh...
+
+If the last value in a string is a #, then
+No
+Maybe.
+If the last value in a string is a #
+No, definitely not.
+
+## Day 13
+
+Very similar to the leetcode palindrome example.
+
+Approach:
+
+- Find adjacent pairs in first row and column
+- Check if remaining rows and columns also have pair
