@@ -185,3 +185,12 @@ Could be identified as follows:
 We _ONLY_ care about the newly-created reflection lines. I think.
 
 Yup!
+
+I'm curious if the memoization actually counted for anything...
+
+## Day 14
+
+- Split into columns
+- For each column
+  - Calculate number of 'O's between '#'s
+  - Calculate "weight" according to index offset
