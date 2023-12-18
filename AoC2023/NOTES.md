@@ -194,3 +194,22 @@ I'm curious if the memoization actually counted for anything...
 - For each column
   - Calculate number of 'O's between '#'s
   - Calculate "weight" according to index offset
+
+### Puz 2
+
+Hypothesis:
+See if there's a "frequency" of the pattern as a whole.
+Doesn't mean the same rock goes back to the same place.
+
+How to perform a tilt:
+
+- Given a reference tilt direction
+- snth
+- Walk backwards from fixed "rocks" and count "loose rocks" before next fixed
+- Place $N$ "loose" rocks in the opposite ref direction.
+
+- From a start point, find the next fixed rock or endpoint.
+- Count movable rocks between here and there.
+- Place N movable rocks right after the start point
+
+I trust my idea for this, but it's gonna take a while to implement.
