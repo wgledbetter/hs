@@ -1,9 +1,9 @@
-module QuickCheck.HB.TestTwo where
+module QuickCheck.HB.TestCh02 where
 
-import HB.Two
+import HB.Ch02
 import Test.Tasty.QuickCheck as QC
 
-propTwoSixTwo x y = HB.Two.twoSixTwo x y
+propTwoSixTwo x y = HB.Ch02.Ch02SixTwo x y
   where
     types = (x :: Int, y :: Int)
 

@@ -1,7 +1,10 @@
-module HUnit.HB.TestTwo where
+module HUnit.HB.TestCh02 where
 
-import HB.Two
+import HB.Ch02
   ( half,
+    parenOne,
+    parenThree,
+    parenTwo,
     square,
     twoFiveThree,
     twoFiveTwo,
@@ -23,7 +26,7 @@ testHalf =
     "test half function"
     $ assertEqual
       "Half of five is two and a half"
-      (HB.Two.half 5.0)
+      (HB.Ch02.half 5.0)
       2.5
 
 testSquare :: Test.Tasty.Core.TestTree
@@ -32,7 +35,7 @@ testSquare =
     "test square function"
     $ assertEqual
       "Five squared is twenty-five"
-      (HB.Two.square 5)
+      (HB.Ch02.square 5)
       25
 
 testTwoFiveTwo :: Test.Tasty.Core.TestTree
@@ -41,7 +44,7 @@ testTwoFiveTwo =
     "test answer to 2.5.2"
     $ assertEqual
       "Area of circle with radius 4 is roughly 50.24"
-      (HB.Two.twoFiveTwo 4)
+      (HB.Ch02.Ch02FiveTwo 4)
       50.24
 
 testTwoFiveThree :: Test.Tasty.Core.TestTree
@@ -50,7 +53,7 @@ testTwoFiveThree =
     "test answer to 2.5.3"
     $ assertEqual
       "Area of circle with radius 3 is much closer to 28.269"
-      (HB.Two.twoFiveThree 3)
+      (HB.Ch02.Ch02FiveThree 3)
       $ pi * 3 * 3
 
 -- 2.6 -------------------------------------------------------------------------
@@ -60,5 +63,31 @@ testTwoSixOne =
   testCase
     "test solution to 2.6.1"
     $ assertBool
-      "parenthesis work like this"
-      HB.Two.twoSixOneAnswer
+      "parentheses work like this"
+      HB.Ch02.Ch02SixOneAnswer
+
+-- 2.11 ------------------------------------------------------------------------
+
+testParenOne :: Test.Tasty.Core.TestTree
+testParenOne =
+  testCase
+    "test solution to 2.11.1"
+    $ assertBool
+      "Parentheses work like this"
+      HB.Ch02.parenOne
+
+testParenTwo :: Test.Tasty.Core.TestTree
+testParenTwo =
+  testCase
+    "test solution to 2.11.2"
+    $ assertBool
+      "Parentheses work like this"
+      HB.Ch02.parenTwo
+
+testParenThree :: Test.Tasty.Core.TestTree
+testParenThree =
+  testCase
+    "test solution to 2.11.3"
+    $ assertBool
+      "Parentheses work like this"
+      HB.Ch02.parenThree

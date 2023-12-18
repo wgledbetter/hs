@@ -22,6 +22,7 @@ description: Please see the README on GitHub at <https://github.com/githubuser/h
 dependencies:
   - base >= 4.7 && < 5
   - template-haskell
+  - time
 
 default-extensions:
   - TemplateHaskell
@@ -38,6 +39,8 @@ executables:
       - -rtsopts
       - -with-rtsopts=-N
       - -XTemplateHaskell
+      - -fasm
+      - -O2
     dependencies:
       - hs
 
@@ -51,9 +54,26 @@ executables:
       - -rtsopts
       - -with-rtsopts=-N
       - -XTemplateHaskell
+      - -O2
+      - -fasm
     dependencies:
       - hs
       - criterion
+
+  aoc2023:
+    main: Main.hs
+    source-dirs:
+      - AoC2023
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -XTemplateHaskell
+      - -fasm
+      - -O2
+    dependencies:
+      - hs
+      - parallel
 
 tests:
   hs-test:

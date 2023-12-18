@@ -1,6 +1,6 @@
-module FPPG.Two where
+module FPPG.Ch02 where
 
-import HB.Two (x)
+import HB.Ch02 (x)
 
 -- Composition
 square :: (Num a) => a -> a
