@@ -41,6 +41,7 @@ library
       HB.Ch12
       LC
       Lib
+      Lyah
       Memo
       Scratch.BTH1
       Scratch.BTH2
@@ -112,6 +113,7 @@ executable hs-bench
       HB.Ch12
       LC
       Lib
+      Lyah
       Memo
       Scratch.BTH1
       Scratch.BTH2
@@ -170,6 +172,7 @@ test-suite hs-test
       HB.Ch12
       LC
       Lib
+      Lyah
       Memo
       Scratch.BTH1
       Scratch.BTH2
