@@ -2,6 +2,7 @@ module Day14 where
 
 import Data.List (sort)
 import Day08 (transpose)
+import Day13 (intersection')
 import HB.Ch09 (isEmpty, splitAndDrop)
 import HB.Ch11 (contains, idxsOf)
 import HB.Ch12 (pairizeList)
@@ -83,36 +84,70 @@ tupleSum (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
 negTuple :: (Int, Int) -> (Int, Int)
 negTuple (x, y) = (-x, -y)
 
-tilt :: (Int, Int) -> [(Int, Int)] -> Direction -> [(Int, Int)] -> [(Int, Int)]
-tilt (nR, nC) static dir mobile = []
+splitAndDropIf :: (a -> Bool) -> [a] -> [[a]]
+splitAndDropIf _ [] = []
+splitAndDropIf cond (x : xs)
+  | cond x = splitAndDropIf cond xs
+  | otherwise = takeWhile (not . cond) (x : xs) : splitAndDropIf cond (dropWhile (not . cond) xs)
+
+-- "Tilt" a list towards the front
+tiltList :: Int -> [Int] -> [Int] -> [Int]
+tiltList size static mobile = newMobile
   where
-    refDir = case dir of
-      North -> (-1, 0)
-      West -> (0, -1)
-      South -> (1, 0)
-      East -> (0, 1)
-    negRefDir = negTuple refDir
-    startWalks = case dir of -- Where to begin stepping from
-      North -> [(0, n) | n <- enumFromTo 0 (nC - 1)]
-      West -> [(n, 0) | n <- enumFromTo 0 (nR - 1)]
-      South -> [(nR - 1, n) | n <- enumFromTo 0 (nC - 1)]
-      East -> [(n, nC - 1) | n <- enumFromTo 0 (nR - 1)]
-    stopWalks = case dir of
-      North -> [(nR - 1, n) | n <- enumFromTo 0 (nC - 1)]
-      West -> [(n, nC - 1) | n <- enumFromTo 0 (nR - 1)]
-      South -> [(0, n) | n <- enumFromTo 0 (nC - 1)]
-      East -> [(n, 0) | n <- enumFromTo 0 (nR - 1)]
-    stepsFrom here = scanl (\h _ -> tupleSum h negRefDir) here [0 ..]
-    next here =
-      head $
-        dropWhile
-          (\h -> (not $ contains h static) && (not $ contains h stopWalks))
-          (stepsFrom here)
+    idxGroups = splitAndDropIf (flip contains static) [0 .. size - 1]
+    mobilePer = map (length . intersection' mobile) idxGroups
+    newMobile = concatMap (\(n, ig) -> take n $ enumFrom $ head ig) $ zip mobilePer idxGroups
+
+tiltListBack :: Int -> [Int] -> [Int] -> [Int]
+tiltListBack size static mobile = cvt $ tiltList size (cvt static) (cvt mobile)
+  where
+    cvt' i = size - i - 1
+    cvt = map cvt'
+
+tilt :: (Int, Int) -> [(Int, Int)] -> Direction -> [(Int, Int)] -> [(Int, Int)]
+tilt (nR, nC) static dir mobile = case dir of
+  North ->
+    concatMap
+      ( \ci ->
+          map (\newRow -> (newRow, ci)) $
+            tiltList nR (map fst $ filter (\(sr, sc) -> sc == ci) static) (map fst $ filter (\(mr, mc) -> mc == ci) mobile)
+      )
+      [0 .. nC - 1]
+  South ->
+    concatMap
+      ( \ci ->
+          map (\newRow -> (newRow, ci)) $
+            tiltListBack nR (map fst $ filter (\(sr, sc) -> sc == ci) static) (map fst $ filter (\(mr, mc) -> mc == ci) mobile)
+      )
+      [0 .. nC - 1]
+  East ->
+    concatMap
+      ( \ri ->
+          map (\newCol -> (ri, newCol)) $
+            tiltListBack nC (map snd $ filter (\(sr, sc) -> sr == ri) static) (map snd $ filter (\(mr, mc) -> mr == ri) mobile)
+      )
+      [0 .. nR - 1]
+  West ->
+    concatMap
+      ( \ri ->
+          map (\newCol -> (ri, newCol)) $
+            tiltList nC (map snd $ filter (\(sr, sc) -> sr == ri) static) (map snd $ filter (\(mr, mc) -> mr == ri) mobile)
+      )
+      [0 .. nR - 1]
 
 spin :: (Int, Int) -> [(Int, Int)] -> [(Int, Int)] -> [(Int, Int)]
 spin dims static = sort . (tt East . tt South . tt West . tt North)
   where
     tt = tilt dims static
+
+cyclone :: (Int, Int) -> [(Int, Int)] -> [((Int, Int))] -> [[(Int, Int)]]
+cyclone dims static mobile = mobile : cyclone dims static (spin dims static mobile)
+
+-- Designed for infinite lists
+takeUntilRepeat :: (Eq a) => [a] -> [a]
+takeUntilRepeat l = base ++ [l !! length base]
+  where
+    base = foldl (\l i -> if contains i l then l else l ++ [i]) [] l
 
 -- IO --------------------------------------------------------------------------
 
