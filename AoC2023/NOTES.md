@@ -213,3 +213,8 @@ How to perform a tilt:
 - Place N movable rocks right after the start point
 
 I trust my idea for this, but it's gonna take a while to implement.
+
+## Day 15
+
+GHCI = 506269
+stack run = 506311
