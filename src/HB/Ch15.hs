@@ -2,6 +2,8 @@
 
 module HB.Ch15 where
 
+import Control.Monad -- Cheating and kind of skipping ahead
+import Data.List.NonEmpty
 import Data.Monoid
 import Test.QuickCheck
 
@@ -113,6 +115,7 @@ monoidAssoc :: (Eq m, Monoid m) => m -> m -> m -> Bool
 monoidAssoc = assoc (<>)
 
 qqa = quickCheck (monoidAssoc :: (String -> String -> String -> Bool))
+
 vva = verboseCheck (monoidAssoc :: (String -> String -> String -> Bool))
 
 monoidLeftIdent :: (Eq m, Monoid m) => m -> Bool
@@ -123,3 +126,273 @@ monoidRightIdent a = (a <> mempty) == a
 
 -- QuickCheck uses the "Arbitrary" typeclass to generate inputs
 -- This section is basically saying just because you use the word "monoid" as the name of a type class, that doesn't mean the definitions you've provided are actually monoid-al.
+
+-- Exercise: Maybe another Monoid
+
+newtype First' a = First' {getFirst' :: Optional a} deriving (Eq, Show)
+
+instance Semigroup (First' a) where
+  (<>) (First' (Only x)) _ = First' (Only x)
+  (<>) _ b = b
+
+instance Monoid (First' a) where
+  mempty = First' Nada
+
+firstMappend :: First' a -> First' a -> First' a
+firstMappend = mappend
+
+instance (Arbitrary a) => Arbitrary (First' a) where
+  arbitrary = frequency [(5, liftM (First' . Only) arbitrary), (1, return (First' Nada))]
+
+type FirstMappend = First' String -> First' String -> First' String -> Bool
+
+type FstId = First' String -> Bool
+
+mck1 = quickCheck (monoidAssoc :: FirstMappend)
+
+mck2 = quickCheck (monoidLeftIdent :: FstId)
+
+mck3 = quickCheck (monoidRightIdent :: FstId)
+
+-- 15.13: Semigroup ------------------------------------------------------------
+-- Just remove the identity from Monoid.
+
+nel = 1 :| [2, 3]
+
+hn = Data.List.NonEmpty.head nel
+
+h2 = nel Data.List.NonEmpty.!! 1
+
+-- 15.14: Algebra Strength -----------------------------------------------------
+-- has more ops
+
+-- 15.15: Exercises ------------------------------------------------------------
+-- Semigroup
+-- 1
+data Trivial = Trivial deriving (Eq, Show)
+
+instance Semigroup Trivial where
+  (<>) _ _ = Trivial
+
+instance Arbitrary Trivial where
+  arbitrary = return Trivial
+
+semigroupAssoc :: (Eq s, Semigroup s) => s -> s -> s -> Bool
+semigroupAssoc x y z = (x <> (y <> z)) == ((x <> y) <> z)
+
+type TrivAssoc = Trivial -> Trivial -> Trivial -> Bool
+
+ex11 = quickCheck (semigroupAssoc :: TrivAssoc)
+
+-- 2
+newtype Identity a = Identity a deriving (Eq, Show)
+
+instance (Semigroup a) => Semigroup (Identity a) where
+  (<>) (Identity l) (Identity r) = Identity (l <> r)
+
+instance (Arbitrary a) => Arbitrary (Identity a) where
+  arbitrary = liftM Identity arbitrary
+
+type IdentAssoc = Identity String -> Identity String -> Identity String -> Bool
+
+ex12 = quickCheck (semigroupAssoc :: IdentAssoc)
+
+-- 3
+data Two a b = Two a b deriving (Eq, Show)
+
+instance (Semigroup a, Semigroup b) => Semigroup (Two a b) where
+  (<>) (Two x y) (Two i j) = Two (x <> i) (y <> j)
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (Two a b) where
+  arbitrary = liftM2 Two arbitrary arbitrary
+
+type TwoAssoc = Two (Sum Int) (Product Int) -> Two (Sum Int) (Product Int) -> Two (Sum Int) (Product Int) -> Bool
+
+ex13 = quickCheck (semigroupAssoc :: TwoAssoc)
+
+-- 4
+data Three a b c = Three a b c deriving (Eq, Show)
+
+instance (Semigroup a, Semigroup b, Semigroup c) => Semigroup (Three a b c) where
+  (<>) (Three a b c) (Three x y z) = Three (a <> x) (b <> y) (c <> z)
+
+instance (Arbitrary a, Arbitrary b, Arbitrary c) => Arbitrary (Three a b c) where
+  arbitrary = liftM3 Three arbitrary arbitrary arbitrary
+
+type ThreeAssoc =
+  Three String (Sum Rational) (Product Rational) ->
+  Three String (Sum Rational) (Product Rational) ->
+  Three String (Sum Rational) (Product Rational) ->
+  Bool
+
+ex14 = quickCheck (semigroupAssoc :: ThreeAssoc)
+
+-- 5
+data Four a b c d = Four a b c d deriving (Eq, Show)
+
+instance (Semigroup a, Semigroup b, Semigroup c, Semigroup d) => Semigroup (Four a b c d) where
+  (<>) (Four a b c d) (Four w x y z) = Four (a <> w) (b <> x) (c <> y) (d <> z)
+
+instance (Arbitrary a, Arbitrary b, Arbitrary c, Arbitrary d) => Arbitrary (Four a b c d) where
+  arbitrary = liftM4 Four arbitrary arbitrary arbitrary arbitrary
+
+type FourAssoc =
+  Four String (Product Rational) (Maybe (Sum Int)) (First (Maybe Double)) ->
+  Four String (Product Rational) (Maybe (Sum Int)) (First (Maybe Double)) ->
+  Four String (Product Rational) (Maybe (Sum Int)) (First (Maybe Double)) ->
+  Bool
+
+ex15 = quickCheck (semigroupAssoc :: FourAssoc)
+
+-- 6
+newtype BoolConj = BoolConj Bool deriving (Eq, Show)
+
+instance Semigroup BoolConj where
+  (<>) (BoolConj True) (BoolConj y) = BoolConj y
+  (<>) (BoolConj x) (BoolConj True) = BoolConj x
+  (<>) _ _ = BoolConj False
+
+instance Arbitrary BoolConj where
+  arbitrary = frequency [(1, return (BoolConj True)), (1, return (BoolConj False))]
+
+type BoolConjAssoc = BoolConj -> BoolConj -> BoolConj -> Bool
+
+ex16 = quickCheck (semigroupAssoc :: BoolConjAssoc)
+
+-- 7
+newtype BoolDisj = BoolDisj Bool deriving (Eq, Show)
+
+instance Semigroup BoolDisj where
+  (<>) (BoolDisj True) _ = BoolDisj True
+  (<>) _ (BoolDisj True) = BoolDisj True
+  (<>) _ _ = BoolDisj False
+
+instance Arbitrary BoolDisj where
+  arbitrary = frequency [(1, return (BoolDisj True)), (1, return (BoolDisj False))]
+
+type BoolDisjAssoc = BoolDisj -> BoolDisj -> BoolDisj -> Bool
+
+ex17 = quickCheck (semigroupAssoc :: BoolDisjAssoc)
+
+-- 8
+data Or a b = Fst a | Snd b deriving (Eq, Show)
+
+instance Semigroup (Or a b) where
+  (<>) (Snd x) _ = Snd x
+  (<>) (Fst _) (Snd y) = Snd y
+  (<>) _ y = y
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (Or a b) where
+  arbitrary = frequency [(1, liftM Fst arbitrary), (1, liftM Snd arbitrary)]
+
+type OrAssoc =
+  Or String (Product Rational) ->
+  Or String (Product Rational) ->
+  Or String (Product Rational) ->
+  Bool
+
+ex18 = quickCheck (semigroupAssoc :: OrAssoc)
+
+-- 9
+newtype Combine a b = Combine {unCombine :: (a -> b)}
+
+instance (Semigroup b) => Semigroup (Combine a b) where
+  (<>) (Combine f) (Combine g) = Combine (\x -> (f x) <> (g x))
+
+-- instance (CoArbitrary a,Arbitrary b) => Arbitrary (Combine a b) where
+--   arbitrary = liftM Combine arbitrary
+
+-- type CombineAssoc =
+--   Combine Int (Sum Int) ->
+--   Combine Int (Sum Int) ->
+--   Combine Int (Sum Int) ->
+--   Bool
+
+-- ex19 = quickCheck (semigroupAssoc :: CombineAssoc)
+
+-- 10
+newtype Comp a = Comp {unComp :: (a -> a)}
+
+instance Semigroup (Comp a) where
+  (<>) (Comp f) (Comp g) = Comp $ f . g
+
+-- 11
+data Validation a b = Failure' a | Success' b deriving (Eq, Show)
+
+instance (Semigroup a) => Semigroup (Validation a b) where
+  (<>) (Success' x) _ = Success' x
+  (<>) _ (Success' y) = Success' y
+  (<>) (Failure' x) (Failure' y) = Failure' (x <> y)
+
+-- Monoid Exercises
+-- 1
+instance Monoid Trivial where
+  mempty = Trivial
+
+type TrivId = Trivial -> Bool
+
+ex21l = quickCheck (monoidLeftIdent :: TrivId)
+
+ex21r = quickCheck (monoidRightIdent :: TrivId)
+
+-- 2
+instance (Monoid a) => Monoid (Identity a) where
+  mempty = Identity mempty
+
+type IdentId = Identity String -> Bool
+
+ex22l = quickCheck (monoidLeftIdent :: IdentId)
+
+ex22r = quickCheck (monoidRightIdent :: IdentId)
+
+-- 3
+instance (Monoid a, Monoid b) => Monoid (Two a b) where
+  mempty = Two mempty mempty
+
+type TwoId = Two (Sum Int) (Product Rational) -> Bool
+
+ex23l = quickCheck (monoidLeftIdent :: TwoId)
+
+ex23r = quickCheck (monoidRightIdent :: TwoId)
+
+-- 4
+instance Monoid BoolConj where
+  mempty = BoolConj True
+
+type BoolConjId = BoolConj -> Bool
+
+ex24l = quickCheck (monoidLeftIdent :: BoolConjId)
+
+ex24r = quickCheck (monoidRightIdent :: BoolConjId)
+
+-- 5
+instance Monoid BoolDisj where
+  mempty = BoolDisj False
+
+type BoolDisjId = BoolDisj -> Bool
+
+ex25l = quickCheck (monoidLeftIdent :: BoolDisjId)
+
+ex25r = quickCheck (monoidRightIdent :: BoolDisjId)
+
+-- 6
+instance (Monoid b) => Monoid (Combine a b) where
+  mempty = Combine (\_ -> mempty)
+
+-- 7
+instance Monoid (Comp a) where
+  mempty = Comp id
+
+-- 8
+newtype Mem s a = Mem {runMem :: s -> (a, s)}
+
+instance (Semigroup a) => Semigroup (Mem s a) where
+  (<>) (Mem f) (Mem g) = Mem h
+    where
+      h s = ((fst fs) <> (fst gs), (snd . f . snd) gs)
+        where
+          fs = f s
+          gs = g s
+
+instance (Monoid a) => Monoid (Mem s a) where
+  mempty = Mem (\s -> (mempty, s))
