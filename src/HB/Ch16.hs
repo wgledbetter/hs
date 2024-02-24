@@ -1,5 +1,5 @@
-{-# LANGUAGE FlexibleInstances #-}
 -- Functor
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE RankNTypes #-}
 
 module HB.Ch16 where
@@ -423,3 +423,5 @@ instance Functor TalkToMe where
   fmap _ Halt = Halt
   fmap f (Print s x) = Print s (f x)
   fmap f (Read s2a) = Read (f . s2a)
+
+-- Oh, and <$> is infix shorthand for fmap

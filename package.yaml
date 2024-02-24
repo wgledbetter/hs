@@ -24,6 +24,7 @@ dependencies:
   - template-haskell
   - time
   - QuickCheck
+  - checkers
 
 default-extensions:
   - TemplateHaskell
