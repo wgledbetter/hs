@@ -25,6 +25,7 @@ dependencies:
   - time
   - QuickCheck
   - checkers
+  - containers
 
 default-extensions:
   - TemplateHaskell

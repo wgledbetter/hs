@@ -300,6 +300,7 @@ a ma mf = mf <*> ma
 
 -- 5: I cheated and looked at the GHC.Base definition of "mapM". That and "sequence" were the hoogle results for "[m a] -> m [a]".
 -- Also, I don't _really_ understand what's going on under the hood when you do this double variable assignment-like thing inside "do" notation.
+-- See "multi-line do notation" here: https://www.haskellforall.com/2014/10/how-to-desugar-haskell-code.html
 meh :: (Monad m) => [a] -> (a -> m b) -> m [b]
 meh [] _ = return []
 meh (x : xs) f = do
