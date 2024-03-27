@@ -1,3 +1,6 @@
 [submodule "ref/haskell-trainings"]
 	path = ref/haskell-trainings
 	url = https://github.com/google/haskell-trainings.git
+[submodule "ref/par-tutorial"]
+	path = ref/par-tutorial
+	url = https://github.com/simonmar/par-tutorial.git

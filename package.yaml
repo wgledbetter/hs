@@ -26,6 +26,7 @@ dependencies:
   - QuickCheck
   - checkers
   - containers
+  - parallel
 
 default-extensions:
   - TemplateHaskell
@@ -41,38 +42,71 @@ executables:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
-      - -XTemplateHaskell
       - -fasm
       - -O2
     dependencies:
       - hs
+    extensions:
+      - TemplateHaskell
 
-  hs-bench:
+  bench:
     main: Bench.hs
+    other-modules: []
     source-dirs:
       - bench
-      - src
     ghc-options:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
-      - -XTemplateHaskell
       - -O2
       - -fasm
     dependencies:
       - hs
       - criterion
+    extensions:
+      - TemplateHaskell
 
   aoc2023:
     main: Main.hs
+    other-modules:
+      [
+        Day01,
+        Day02,
+        Day03,
+        Day04,
+        Day05,
+        Day06,
+        Day07,
+        Day08,
+        Day09,
+        Day10,
+        Day11,
+        Day12,
+        Day13,
+        Day14,
+        Day15,
+      ]
     source-dirs:
       - AoC2023
     ghc-options:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
-      - -XTemplateHaskell
       - -fasm
+      - -O2
+    dependencies:
+      - hs
+      - parallel
+    extensions:
+      - TemplateHaskell
+
+  mt:
+    main: Main.hs
+    other-modules: []
+    source-dirs:
+      - mt
+    ghc-options:
+      - -threaded
       - -O2
     dependencies:
       - hs
@@ -83,15 +117,15 @@ tests:
     main: Test.hs
     source-dirs:
       - test
-      - src
     ghc-options:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
-      - -XTemplateHaskell
     dependencies:
       - hs
       - tasty
       - tasty-smallcheck
       - tasty-quickcheck
       - tasty-hunit
+    extensions:
+      - TemplateHaskell
