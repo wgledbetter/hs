@@ -6,3 +6,7 @@ Only a few.
 ## Page 780
 
 After "-- but note what happens here", I think the line should be `f <> f`, not `f <> g`.
+
+## Page 819
+
+Exercise 1, should it actually say `data Constant a b = Constant a`?

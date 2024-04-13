@@ -45,6 +45,8 @@ library
       HB.Ch18
       HB.Ch19
       HB.Ch20
+      HB.Ch21
+      HB.Morse
       LC
       Lib
       Memo
@@ -59,14 +61,17 @@ library
       src
   default-extensions:
       TemplateHaskell
+  ghc-options: -Werror
   build-depends:
       QuickCheck
     , base >=4.7 && <5
+    , bytestring
     , checkers
     , containers
     , parallel
     , template-haskell
     , time
+    , wreq
   default-language: Haskell2010
 
 executable aoc2023
@@ -91,16 +96,18 @@ executable aoc2023
       AoC2023
   default-extensions:
       TemplateHaskell
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -fasm -O2
+  ghc-options: -Werror -threaded -rtsopts -with-rtsopts=-N -fasm -O2
   build-depends:
       QuickCheck
     , base >=4.7 && <5
+    , bytestring
     , checkers
     , containers
     , hs
     , parallel
     , template-haskell
     , time
+    , wreq
   default-language: Haskell2010
 
 executable bench
@@ -109,10 +116,11 @@ executable bench
       bench
   default-extensions:
       TemplateHaskell
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -O2 -fasm
+  ghc-options: -Werror -threaded -rtsopts -with-rtsopts=-N -O2 -fasm
   build-depends:
       QuickCheck
     , base >=4.7 && <5
+    , bytestring
     , checkers
     , containers
     , criterion
@@ -120,6 +128,7 @@ executable bench
     , parallel
     , template-haskell
     , time
+    , wreq
   default-language: Haskell2010
 
 executable hs-exe
@@ -130,16 +139,18 @@ executable hs-exe
       app
   default-extensions:
       TemplateHaskell
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -fasm -O2
+  ghc-options: -Werror -threaded -rtsopts -with-rtsopts=-N -fasm -O2
   build-depends:
       QuickCheck
     , base >=4.7 && <5
+    , bytestring
     , checkers
     , containers
     , hs
     , parallel
     , template-haskell
     , time
+    , wreq
   default-language: Haskell2010
 
 executable mt
@@ -148,16 +159,18 @@ executable mt
       mt
   default-extensions:
       TemplateHaskell
-  ghc-options: -threaded -O2
+  ghc-options: -Werror -threaded -O2
   build-depends:
       QuickCheck
     , base >=4.7 && <5
+    , bytestring
     , checkers
     , containers
     , hs
     , parallel
     , template-haskell
     , time
+    , wreq
   default-language: Haskell2010
 
 test-suite hs-test
@@ -171,10 +184,11 @@ test-suite hs-test
       test
   default-extensions:
       TemplateHaskell
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Werror -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck
     , base >=4.7 && <5
+    , bytestring
     , checkers
     , containers
     , hs
@@ -185,4 +199,5 @@ test-suite hs-test
     , tasty-smallcheck
     , template-haskell
     , time
+    , wreq
   default-language: Haskell2010

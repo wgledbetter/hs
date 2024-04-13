@@ -141,6 +141,7 @@ instance Foldable (Three a b) where
 data Three' a b = Three' a b b deriving (Eq, Show)
 
 -- NOTE(wgl): This passes tests, but the implementation is not unique. Can also use the commented lines.
+-- NOTE(wgl): SEE Ch21:266 FOR CORRECT IMPLEMENTATION
 instance Foldable (Three' a) where
   -- foldr f c (Three' _ x y) = f x c
   foldr f c (Three' _ x y) = f y c
@@ -156,6 +157,7 @@ t4f = quickBatch $ foldable (undefined :: Three' Rational (Double, String, Produ
 -- 5
 data Four' a b = Four' a b b b deriving (Eq, Show)
 
+-- NOTE(wgl): Incorrect. See Ch21 "Bigger"
 instance Foldable (Four' a) where
   foldr f c (Four' _ _ _ x) = f x c
 

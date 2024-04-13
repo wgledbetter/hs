@@ -27,12 +27,17 @@ dependencies:
   - checkers
   - containers
   - parallel
+  - bytestring
+  - wreq # HB.Ch21
 
 default-extensions:
   - TemplateHaskell
 
 library:
   source-dirs: src
+
+ghc-options:
+  - -Werror
 
 executables:
   hs-exe:
