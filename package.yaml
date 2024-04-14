@@ -30,6 +30,7 @@ dependencies:
   - bytestring
   - wreq # HB.Ch21
   - transformers
+  - random
 
 default-extensions:
   - TemplateHaskell

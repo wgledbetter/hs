@@ -306,7 +306,7 @@ s' = summed <$> ((,) <$> xs <*> ys)
 officialExMain :: IO ()
 officialExMain = do
   -- 1
-  print $ fold (BoolConj <$> sequA 8) -- BoolConj is a Monoid implementing (||)
+  print $ fold (BoolConj <$> sequA 8) -- BoolConj is a Monoid implementing (&&). BoolDisj implements (||)
 
   -- 2
   print $ sequA $ fromMaybe 0 s'

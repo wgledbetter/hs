@@ -47,6 +47,7 @@ library
       HB.Ch20
       HB.Ch21
       HB.Ch22
+      HB.Ch23
       HB.Morse
       LC
       Lib
@@ -70,6 +71,7 @@ library
     , checkers
     , containers
     , parallel
+    , random
     , template-haskell
     , time
     , transformers
@@ -107,6 +109,7 @@ executable aoc2023
     , containers
     , hs
     , parallel
+    , random
     , template-haskell
     , time
     , transformers
@@ -129,6 +132,7 @@ executable bench
     , criterion
     , hs
     , parallel
+    , random
     , template-haskell
     , time
     , transformers
@@ -152,6 +156,7 @@ executable hs-exe
     , containers
     , hs
     , parallel
+    , random
     , template-haskell
     , time
     , transformers
@@ -173,6 +178,8 @@ executable mt
     , containers
     , hs
     , parallel
+    , random
+    , repa
     , template-haskell
     , time
     , transformers
@@ -199,6 +206,7 @@ test-suite hs-test
     , containers
     , hs
     , parallel
+    , random
     , tasty
     , tasty-hunit
     , tasty-quickcheck
