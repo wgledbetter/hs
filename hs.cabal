@@ -46,6 +46,7 @@ library
       HB.Ch19
       HB.Ch20
       HB.Ch21
+      HB.Ch22
       HB.Morse
       LC
       Lib
@@ -71,6 +72,7 @@ library
     , parallel
     , template-haskell
     , time
+    , transformers
     , wreq
   default-language: Haskell2010
 
@@ -107,6 +109,7 @@ executable aoc2023
     , parallel
     , template-haskell
     , time
+    , transformers
     , wreq
   default-language: Haskell2010
 
@@ -128,6 +131,7 @@ executable bench
     , parallel
     , template-haskell
     , time
+    , transformers
     , wreq
   default-language: Haskell2010
 
@@ -150,6 +154,7 @@ executable hs-exe
     , parallel
     , template-haskell
     , time
+    , transformers
     , wreq
   default-language: Haskell2010
 
@@ -170,6 +175,7 @@ executable mt
     , parallel
     , template-haskell
     , time
+    , transformers
     , wreq
   default-language: Haskell2010
 
@@ -199,5 +205,6 @@ test-suite hs-test
     , tasty-smallcheck
     , template-haskell
     , time
+    , transformers
     , wreq
   default-language: Haskell2010

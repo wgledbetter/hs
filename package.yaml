@@ -29,6 +29,7 @@ dependencies:
   - parallel
   - bytestring
   - wreq # HB.Ch21
+  - transformers
 
 default-extensions:
   - TemplateHaskell
