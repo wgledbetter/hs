@@ -102,6 +102,42 @@ rt2 = R.reader (* 2)
 -- rDeep 6 = (6+1) + (6*2)
 -- But Reader doesn't have a Num instance
 
+-- But _my_ reader can have a Num instance!
+instance (Num a) => Num (Reader r a) where
+  (+) = liftA2 (+)
+  (*) = liftA2 (*)
+  abs = fmap abs
+  signum = fmap signum
+  negate = fmap negate
+  fromInteger = pure . fromInteger
+
+mrp1 = Reader (+ 1)
+
+mrt2 = Reader (* 2)
+
+perfection = mrp1 + mrt2
+
+instance (Fractional a) => Fractional (Reader r a) where
+  (/) = liftA2 (/)
+  fromRational = pure . fromRational
+
+instance (Floating a) => Floating (Reader r a) where
+  pi = pure pi
+  exp = fmap exp
+  log = fmap log
+  sin = fmap sin
+  cos = fmap cos
+  asin = fmap asin
+  acos = fmap acos
+  atan = fmap atan
+  sinh = fmap sinh
+  cosh = fmap cosh
+  asinh = fmap asinh
+  acosh = fmap acosh
+  atanh = fmap atanh
+
+beauty = asinh perfection
+
 (+++) :: (Num a) => R.Reader b a -> R.Reader b a -> R.Reader b a
 (+++) r1 r2 = (+) <$> r1 <*> r2
 

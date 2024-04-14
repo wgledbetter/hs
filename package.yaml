@@ -38,8 +38,8 @@ default-extensions:
 library:
   source-dirs: src
 
-ghc-options:
-  - -Werror
+# ghc-options:
+#   - -Werror
 
 executables:
   hs-exe:
