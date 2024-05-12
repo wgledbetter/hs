@@ -31,6 +31,11 @@ dependencies:
   - wreq # HB.Ch21
   - transformers
   - random
+  - trifecta
+  - raw-strings-qq
+  - text
+  - hspec
+  - attoparsec
 
 default-extensions:
   - TemplateHaskell
@@ -39,7 +44,8 @@ library:
   source-dirs: src
 
 # ghc-options:
-#   - -Werror
+# - -Werror
+# - -ddump-splices # Shows TemplateHaskell replacements
 
 executables:
   hs-exe:
@@ -67,6 +73,7 @@ executables:
       - -with-rtsopts=-N
       - -O2
       - -fasm
+      - -fforce-recomp
     dependencies:
       - hs
       - criterion
