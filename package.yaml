@@ -36,6 +36,8 @@ dependencies:
   - text
   - hspec
   - attoparsec
+  - repa
+  - vector
 
 default-extensions:
   - TemplateHaskell
