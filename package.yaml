@@ -127,6 +127,19 @@ executables:
     dependencies:
       - hs
       - parallel
+      - repa
+      - vector
+
+  math:
+    main: Main.hs
+    other-modules: []
+    source-dirs:
+      - math
+    ghc-options:
+      - -threaded
+      - -O2
+    dependencies:
+      - hs
 
 tests:
   hs-test:

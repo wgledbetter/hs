@@ -2,6 +2,7 @@ import BenchMemo
 import Criterion.Main
 import HB.BenchCh02
 import HB.BenchCh22
+import Math.BenchDynamical
 import Scratch.BenchBTH
 import Scratch.BenchTTH
 
@@ -17,5 +18,7 @@ benches =
     benchCh22,
     -- Template Haskell
     benchTTH,
-    benchBTH
+    benchBTH,
+    -- Math Stuff
+    benchDynamical
   ]
