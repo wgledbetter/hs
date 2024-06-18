@@ -1,6 +1,9 @@
 [submodule "ref/haskell-trainings"]
-	path = ref/haskell-trainings
-	url = https://github.com/google/haskell-trainings.git
+path = ref/haskell-trainings
+url = https://github.com/google/haskell-trainings.git
 [submodule "ref/par-tutorial"]
-	path = ref/par-tutorial
-	url = https://github.com/simonmar/par-tutorial.git
+path = ref/par-tutorial
+url = https://github.com/simonmar/par-tutorial.git
+[submodule "ref/parconc-examples"]
+path = ref/parconc-examples
+url = git@github.com:wgledbetter/parconc-examples.git
