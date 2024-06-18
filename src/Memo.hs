@@ -20,13 +20,13 @@ memoized_fib = (map fib [0 ..] !!)
     fib 1 = 1
     fib n = memoized_fib (n - 2) + memoized_fib (n - 1)
 
-fib:: (Int->Integer) -> Int -> Integer
+fib :: (Int -> Integer) -> Int -> Integer
 fib f 0 = 1
 fib f 1 = 1
-fib f n = f (n-2) + f (n-1)
+fib f n = f (n - 2) + f (n - 1)
 
-memoizeInt :: (Int ->a) -> (Int -> a)
-memoizeInt fi = (map fi [0..] !!)
+memoizeInt :: (Int -> a) -> (Int -> a)
+memoizeInt fi = (map fi [0 ..] !!)
 
-fixed_fib :: Int->Integer
+fixed_fib :: Int -> Integer
 fixed_fib = fix (memoizeInt . fib)
