@@ -1,0 +1,50 @@
+-- {-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE TypeFamilyDependencies #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE TypeSynonymInstances #-}
+
+module Math.Scratch2 where
+
+import GHC.TypeNats
+import Numeric.LinearAlgebra.Static (R, vector)
+
+-- Type Magic ------------------------------------------------------------------
+
+data NatList = Nil | Cons Nat NatList
+
+-- Head Family
+type family Head (nl :: NatList) :: Nat
+
+type instance Head Nil = 0 -- questionable
+
+type instance Head (Cons x y) = x
+
+-- Tail Family
+type family Tail (nl :: NatList) :: NatList
+
+type instance Tail Nil = Nil
+
+type instance Tail (Cons _ y) = y
+
+-- Dynamics Class --------------------------------------------------------------
+
+class Dynamics d (sz :: NatList) where
+  zeroVector :: d -> R ((Head sz) + 1)
+
+-- Dynamics Implementations ----------------------------------------------------
+
+data TwoD = TwoD Double -- Velocity Magnitude
+  deriving (Eq, Show)
+
+type TwoDSize = Cons 2 Nil
+
+instance Dynamics TwoD TwoDSize where
+  zeroVector _ = vector [0, 0, 0] :: R 3
+
+-- ode d@(TwoD vMag) x = vector [vMag, vMag]

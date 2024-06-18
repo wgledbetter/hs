@@ -1,28 +1,32 @@
 module Math.Dynamical where
 
+import Data.Function (fix)
+import qualified Data.Vector as V
+import Memo (memoizeInt)
+
 -- Utils -----------------------------------------------------------------------
 
-ewSum :: (Num a) => [a] -> [a] -> [a]
-ewSum x y = zipWith (+) x y
+ewSum :: (Num a) => V.Vector a -> V.Vector a -> V.Vector a
+ewSum x y = V.zipWith (+) x y
 
-scalMult :: (Num a) => a -> [a] -> [a]
-scalMult v x = map (* v) x
+scalMult :: (Num a) => a -> V.Vector a -> V.Vector a
+scalMult v x = V.map (* v) x
 
 -- Dynamics Class --------------------------------------------------------------
 
 class Dynamics d where
   numXVars :: d -> Int
   numUVars :: d -> Int
-  ode :: d -> [Double] -> [Double]
+  ode :: d -> V.Vector Double -> V.Vector Double
 
-  stateOf :: d -> [Double] -> [Double]
-  stateOf dyn x = take (numXVars dyn) x
+  stateOf :: d -> V.Vector Double -> V.Vector Double
+  stateOf dyn x = V.take (numXVars dyn) x
 
-  timeOf :: d -> [Double] -> Double
-  timeOf dyn x = x !! (numXVars dyn)
+  timeOf :: d -> V.Vector Double -> Double
+  timeOf dyn x = x V.! (numXVars dyn)
 
-  ctrlOf :: d -> [Double] -> [Double]
-  ctrlOf dyn x = drop (numXVars dyn + 1) x
+  ctrlOf :: d -> V.Vector Double -> V.Vector Double
+  ctrlOf dyn x = V.drop (numXVars dyn + 1) x
 
 -- Dynamics Implementations ----------------------------------------------------
 
@@ -32,9 +36,9 @@ data TwoD = TwoD Double -- Velocity Magnitude
 instance Dynamics TwoD where
   numXVars = const 2
   numUVars = const 1
-  ode (TwoD vMag) x0 = [vMag * cos theta, vMag * sin theta]
+  ode (TwoD vMag) x0 = V.fromList [vMag * cos theta, vMag * sin theta]
     where
-      theta = x0 !! 3
+      theta = x0 V.! 3
 
 data OneD = OneD Double -- Acceleration Magnitude
   deriving (Eq, Show)
@@ -42,7 +46,7 @@ data OneD = OneD Double -- Acceleration Magnitude
 instance Dynamics OneD where
   numXVars = const 2
   numUVars = const 0
-  ode (OneD accMag) x0 = [x0 !! 1, accMag]
+  ode (OneD accMag) x0 = V.fromList [x0 V.! 1, accMag]
 
 -- Integrator ------------------------------------------------------------------
 
@@ -88,7 +92,7 @@ rkf45 =
       bTabT = [0, 1 / 4, 3 / 8, 12 / 13, 1, 1 / 2]
     }
 
-rkStep :: (Dynamics d) => ButcherTableau -> d -> Double -> [Double] -> [Double]
+rkStep :: (Dynamics d) => ButcherTableau -> d -> Double -> V.Vector Double -> V.Vector Double
 rkStep bt dyn dt stc =
   ewSum
     x0
@@ -96,10 +100,10 @@ rkStep bt dyn dt stc =
         dt
         ( foldr
             ewSum
-            (repeat 0)
+            (V.fromList [0 :: Double | _ <- [0 .. numXVars dyn]])
             [ scalMult
                 (bTabB bt !! i)
-                (k i)
+                (memK i)
               | i <- [0 .. stages bt - 1]
             ]
         )
@@ -110,9 +114,10 @@ rkStep bt dyn dt stc =
     t0 = timeOf dyn stc
     c0 = ctrlOf dyn stc
 
-    k :: Int -> [Double]
-    k 0 = f stc
-    k i = f (xx ++ [tt] ++ c0)
+    memK = fix (memoizeInt . k)
+
+    k _ 0 = f stc
+    k g i = f (xx V.++ V.fromList [tt] V.++ c0)
       where
         xx =
           ewSum
@@ -121,10 +126,10 @@ rkStep bt dyn dt stc =
                 dt
                 ( foldr
                     ewSum
-                    (repeat 0)
+                    (V.fromList [0 :: Double | _ <- [0 .. numXVars dyn]])
                     [ scalMult
                         (bTabA bt !! i !! j)
-                        (k j)
+                        (g j)
                       | j <- [0 .. i - 1]
                     ]
                 )

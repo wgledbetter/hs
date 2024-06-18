@@ -1,0 +1,254 @@
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+
+module Math.Scratch where
+
+import qualified Data.Array.Repa as R
+import Data.Function (fix)
+import qualified Data.Vector.Unboxed as V
+import HB.Ch18 (Identity (Identity))
+import Memo (memoizeInt)
+import qualified Text.PrettyPrint as PP
+import qualified Text.PrettyPrint.HughesPJClass as PP
+
+-- I must have a fundamental misunderstanding of what I can do with polymorphism
+-- Yeah, type variables in type definitions cannot be resolved inside a value of that type.
+-- Someone else solidifies the type, so it must be capable of actually returning a variety of types.
+-- The signature `f :: (Floating x) => x` says "I can be anything that implements Floating," NOT "I will be something that implements Floating."
+
+addScalar :: (Floating x, V.Unbox x, R.Source r1 x) => x -> R.Array r1 R.DIM1 x -> x
+addScalar s x = x0 + s
+  where
+    x0 = x R.! (R.Z R.:. 0 :: R.DIM1)
+
+testy :: Double
+testy = addScalar 2.5 (R.fromListUnboxed (R.Z R.:. 5 :: R.DIM1) [1, 2, 3, 4, 5])
+
+-- Utils -----------------------------------------------------------------------
+
+rowsToReprArray :: (V.Unbox a) => [[a]] -> R.Array R.U R.DIM2 a
+rowsToReprArray rows = R.fromListUnboxed (R.Z R.:. nRows R.:. nCols) (foldr (++) [] rows)
+  where
+    nRows = length rows
+    nCols = length $ head rows
+
+scalarMult scalar repaArray = R.map (* scalar) repaArray
+
+zeroArray shape = R.fromFunction shape (const 0)
+
+instance (R.Source t a, PP.Pretty a) => PP.Pretty (R.Array t R.DIM1 a) where
+  pPrint a = PP.brackets $ PP.hcat $ PP.punctuate (PP.comma <> PP.space) elems
+    where
+      elems = [PP.pPrint (a R.! j) | i <- [0 .. n - 1], let j = R.Z R.:. i]
+      R.Z R.:. n = R.extent a
+
+instance (R.Source t a, PP.Pretty a) => PP.Pretty (R.Array t R.DIM2 a) where
+  pPrint a = PP.vcat elems
+    where
+      elems = [PP.pPrint (R.slice a j) | i <- [0 .. n - 1], let j = R.Any R.:. i R.:. R.All]
+      R.Z R.:. n R.:. _m = R.extent a
+
+-- Dynamics equations and state vector utils -----------------------------------
+
+class Dynamics d where
+  numXVars :: d -> Int
+  numUVars :: d -> Int
+  ode :: (R.Source inRepr Double) => d -> R.Array inRepr R.DIM1 Double -> R.Array R.D R.DIM1 Double
+
+  -- Implicit
+
+  odeInputShape :: d -> R.DIM1
+  odeInputShape d = R.Z R.:. (numXVars d + 1 + numUVars d)
+
+  odeOutputShape :: d -> R.DIM1
+  odeOutputShape d = R.Z R.:. (numXVars d)
+
+  getStateSlice :: (Floating x, R.Source repr x) => d -> R.Array repr R.DIM1 x -> R.Array R.D R.DIM1 x
+  getStateSlice dyn stateTimeControl =
+    R.fromFunction
+      (R.Z R.:. numXVars dyn)
+      (stateTimeControl R.!)
+
+  getTime :: (R.Source repr x) => d -> R.Array repr R.DIM1 x -> x
+  getTime dyn stateTimeControl = stateTimeControl R.! (R.Z R.:. numXVars dyn)
+
+  getControlSlice :: (Floating x, R.Source repr x) => d -> R.Array repr R.DIM1 x -> R.Array R.D R.DIM1 x
+  getControlSlice dyn stateTimeControl =
+    R.fromFunction
+      (R.Z R.:. numUVars dyn)
+      (\(R.Z R.:. newIdx) -> stateTimeControl R.! (R.Z R.:. numXVars dyn + 1 + newIdx))
+
+-- Simple Dynamics -------------------------------------------------------------
+
+-- 2D with control angle
+data TwoDMotionAngularControl = TwoDMotionAngularControl Double -- Velocity Magnitude
+  deriving (Eq, Show)
+
+instance Dynamics TwoDMotionAngularControl where
+  numXVars = const 2
+  numUVars = const 1
+
+  -- ode dyn@(TwoDMotionAngularControl vMag) stateTimeControl =
+  --   R.fromListUnboxed
+  --     (odeOutputShape dyn)
+  --     [ vMag * cos theta,
+  --       vMag * sin theta
+  --     ]
+  --   where
+  --     theta = R.index (getControlSlice dyn stateTimeControl) (R.Z R.:. 0)
+
+  ode dyn@(TwoDMotionAngularControl vMag) stateTimeControl =
+    R.fromFunction
+      (odeOutputShape dyn)
+      ( \(R.Z R.:. outIdx) -> case outIdx of
+          0 -> vMag * cos theta
+          1 -> vMag * sin theta
+      )
+    where
+      theta = R.index (getControlSlice dyn stateTimeControl) (R.Z R.:. 0)
+
+myDyn = TwoDMotionAngularControl 1.0
+
+dynX = R.fromListUnboxed (odeInputShape myDyn) [0, 0, 0, 1 :: Double]
+
+-- Acceleration-based autonomous
+data OneDAcceleration = OneDAcceleration Double -- Acceleration Magnitude
+  deriving (Eq, Show)
+
+instance Dynamics (OneDAcceleration) where
+  numXVars = const 2
+  numUVars = const 0
+
+  -- ode dyn@(OneDAcceleration accMag) stateTimeControl =
+  --   R.fromListUnboxed
+  --     (odeOutputShape dyn)
+  --     [ R.index (getStateSlice dyn stateTimeControl) (R.Z R.:. 1),
+  --       accMag
+  --     ]
+
+  ode dyn@(OneDAcceleration accMag) stateTimeControl =
+    R.fromFunction
+      (odeOutputShape dyn)
+      ( \(R.Z R.:. outIdx) -> case outIdx of
+          0 -> R.index (getStateSlice dyn stateTimeControl) (R.Z R.:. 1)
+          1 -> accMag
+      )
+
+accDyn = OneDAcceleration 1.0
+
+accX = R.fromListUnboxed (odeInputShape accDyn) [0, -10, 0 :: Double]
+
+-- Butcher Tableaus ------------------------------------------------------------
+
+data ButcherTableau = ButcherTableau
+  { stages :: Int,
+    bTabA :: R.Array R.U R.DIM2 Double,
+    bTabT :: R.Array R.U R.DIM1 Double,
+    bTabB :: R.Array R.U R.DIM1 Double,
+    bTabC :: R.Array R.U R.DIM1 Double
+  }
+
+euler =
+  ButcherTableau
+    { stages = 1,
+      bTabA = rowsToReprArray [[]],
+      bTabT = R.fromListUnboxed (R.Z R.:. 1) [0 :: Double],
+      bTabB = R.fromListUnboxed (R.Z R.:. 1) [1 :: Double],
+      bTabC = R.fromListUnboxed (R.Z R.:. 1) [0 :: Double]
+    }
+
+rkf45 =
+  ButcherTableau
+    { stages = 6,
+      bTabA =
+        rowsToReprArray
+          [ [1 / 4, 0, 0, 0, 0 :: Double],
+            [3 / 32, 9 / 32, 0, 0, 0 :: Double],
+            [1932 / 2197, -7200 / 2197, 7296 / 2197, 0, 0 :: Double],
+            [439 / 216, -8, 3680 / 513, -845 / 4104, 0 :: Double],
+            [-8 / 27, 2, -3544 / 2565, 1859 / 4104, -11 / 40]
+          ],
+      bTabB =
+        R.fromListUnboxed
+          (R.Z R.:. 6)
+          [ 16 / 135,
+            0,
+            6656 / 12825,
+            28561 / 56430,
+            -9 / 50,
+            2 / 55 :: Double
+          ],
+      bTabC =
+        R.fromListUnboxed
+          (R.Z R.:. 6)
+          [ 25 / 216,
+            0,
+            1408 / 2565,
+            2197 / 4104,
+            -1 / 5,
+            0 :: Double
+          ],
+      bTabT =
+        R.fromListUnboxed
+          (R.Z R.:. 6)
+          [ 0,
+            1 / 4,
+            3 / 8,
+            12 / 13,
+            1,
+            1 / 2 :: Double
+          ]
+    }
+
+-- Runge Kutta Implementation --------------------------------------------------
+
+-- constant control assumption
+rungeKuttaKs ::
+  (Dynamics d) =>
+  ButcherTableau ->
+  d ->
+  Double ->
+  R.Array R.U R.DIM1 Double ->
+  R.Array R.D R.DIM1 (R.Array R.D R.DIM1 Double)
+rungeKuttaKs bt dyn dt x0 = ks
+  where
+    -- Dynamics stuff
+    state = getStateSlice dyn x0
+    time = getTime dyn x0
+    ctrl = getControlSlice dyn x0
+    f = ode dyn
+
+    ks = R.fromFunction (R.Z R.:. stages bt) (\(R.Z R.:. i) -> memK i)
+
+    -- Memoized K function
+    memK = fix (memoizeInt . goK)
+
+    -- Base K function
+    goK k i = f xx
+      where
+        xx = repaAppend yn tn ctrl
+        yn =
+          state
+            R.+^ scalarMult dt (R.foldP (+) 0 yMat)
+        Identity yMat =
+          R.computeP
+            ( R.fromFunction
+                (R.Z odeOutputShape dyn R.:. i)
+                ( \(R.Z R.:. stIdx R.:. stgNum) ->
+                    index2D (bTabA bt) i stgNum * index1D (k i) stIdx
+                )
+            )
+        tn = time + dt * R.index (bTabT bt) (R.Z R.:. i)
+
+rkStep ::
+  (Dynamics d) =>
+  ButcherTableau ->
+  d ->
+  Double ->
+  R.Array repr1 R.DIM1 Double ->
+  R.Array R.D R.DIM1 Double
+rkStep bt dyn dt x0 = x0 R.+^ scalarMult dt (R.foldP (+) 0 biki)
+  where
+    f = ode dyn
+    Identity biki = R.computeP (R.fromFunction () ())
+    ks = rungeKuttaKs bt dyn dt x0
