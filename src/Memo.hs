@@ -8,17 +8,17 @@ import Data.Function (fix)
 
 -- Obligatory Fibonacci Example
 
-slow_fib :: Int -> Integer
-slow_fib 0 = 0
-slow_fib 1 = 1
-slow_fib n = slow_fib (n - 2) + slow_fib (n - 1)
+slowFib :: Int -> Integer
+slowFib 0 = 0
+slowFib 1 = 1
+slowFib n = slowFib (n - 2) + slowFib (n - 1)
 
-memoized_fib :: Int -> Integer
-memoized_fib = (map fib [0 ..] !!)
+memoizedFib :: Int -> Integer
+memoizedFib = (map fib [0 ..] !!)
   where
     fib 0 = 0
     fib 1 = 1
-    fib n = memoized_fib (n - 2) + memoized_fib (n - 1)
+    fib n = memoizedFib (n - 2) + memoizedFib (n - 1)
 
 fib :: (Int -> Integer) -> Int -> Integer
 fib f 0 = 1
@@ -28,5 +28,5 @@ fib f n = f (n - 2) + f (n - 1)
 memoizeInt :: (Int -> a) -> (Int -> a)
 memoizeInt fi = (map fi [0 ..] !!)
 
-fixed_fib :: Int -> Integer
-fixed_fib = fix (memoizeInt . fib)
+fixedFib :: Int -> Integer
+fixedFib = fix (memoizeInt . fib)
