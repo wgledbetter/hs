@@ -38,6 +38,7 @@ dependencies:
   - attoparsec
   - repa
   - vector
+  - stm
 
 default-extensions:
   - TemplateHaskell

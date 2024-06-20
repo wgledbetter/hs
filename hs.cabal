@@ -58,6 +58,7 @@ library
       MT.Repa
       PCP.Ch02
       PCP.Ch03
+      PCP.Ch07
       Scratch.BTH1
       Scratch.BTH2
       Scratch.TTH1
@@ -83,6 +84,7 @@ library
     , random
     , raw-strings-qq
     , repa
+    , stm
     , template-haskell
     , text
     , time
@@ -128,6 +130,7 @@ executable aoc2023
     , random
     , raw-strings-qq
     , repa
+    , stm
     , template-haskell
     , text
     , time
@@ -158,6 +161,7 @@ executable bench
     , random
     , raw-strings-qq
     , repa
+    , stm
     , template-haskell
     , text
     , time
@@ -189,6 +193,7 @@ executable hs-exe
     , random
     , raw-strings-qq
     , repa
+    , stm
     , template-haskell
     , text
     , time
@@ -218,6 +223,7 @@ executable math
     , random
     , raw-strings-qq
     , repa
+    , stm
     , template-haskell
     , text
     , time
@@ -247,6 +253,7 @@ executable mt
     , random
     , raw-strings-qq
     , repa
+    , stm
     , template-haskell
     , text
     , time
@@ -281,6 +288,7 @@ test-suite hs-test
     , random
     , raw-strings-qq
     , repa
+    , stm
     , tasty
     , tasty-hunit
     , tasty-quickcheck

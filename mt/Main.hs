@@ -7,6 +7,7 @@ import MT.HFM
 import MT.Repa
 import Memo
 import PCP.Ch03
+import qualified PCP.Ch07
 
 -- PCP Ch03 Tests --------------------------------------------------------------
 
@@ -26,4 +27,4 @@ pcpCh03_b = do
 
 -- NOTE: run as "stack run -- mt +RTS -N666"
 main :: IO ()
-main = pcpCh03_a
+main = PCP.Ch07.testCallback2
