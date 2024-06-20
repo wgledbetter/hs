@@ -25,6 +25,8 @@ source-repository head
 
 library
   exposed-modules:
+      Argus.Core
+      Argus.Scratch
       FPPG.Ch02
       FPPG.Ch03
       FPPG.Ch04

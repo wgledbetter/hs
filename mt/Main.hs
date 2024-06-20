@@ -2,6 +2,7 @@
 
 module Main where
 
+import qualified Argus.Scratch
 import Control.Parallel.Strategies
 import MT.HFM
 import MT.Repa
@@ -27,4 +28,4 @@ pcpCh03_b = do
 
 -- NOTE: run as "stack run -- mt +RTS -N666"
 main :: IO ()
-main = PCP.Ch07.testCallback2
+main = Argus.Scratch.testLazySink1
