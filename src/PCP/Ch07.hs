@@ -77,20 +77,20 @@ main3 = do
 
 main4 :: IO ()
 main4 = do
-  t <- atomically $ newTVar "a"
+  t <- newTVarIO "a"
   forkIO
     ( do
-        v <- atomically $ readTVar t
+        v <- readTVarIO t
         printf "1: %d\n" v
     )
   forkIO
     ( do
-        v <- atomically $ readTVar t
+        v <- readTVarIO t
         printf "2: %d\n" v
     )
   forkIO
     ( do
-        v <- atomically $ readTVar t
+        v <- readTVarIO t
         printf "3: %d\n" v
     )
   atomically $ writeTVar t "b"
@@ -213,22 +213,22 @@ fakeAction i = printf "We actin: %d\n" i
 testConsume :: IO ()
 testConsume = do
   m <- newEmptyMVar :: IO (MVar Bool)
-  t <- atomically $ newTVar False
+  t <- newTVarIO False
   consumeMVar m t
-  tv1 <- atomically $ readTVar t
+  tv1 <- readTVarIO t
   print tv1
   threadDelay 1000
-  tv2 <- atomically $ readTVar t
+  tv2 <- readTVarIO t
   print tv2
   putMVar m True
   threadDelay 1000
-  tv3 <- atomically $ readTVar t
+  tv3 <- readTVarIO t
   print tv3
 
 testCallback :: IO ()
 testCallback = do
-  t1 <- atomically $ newTVar False
-  t2 <- atomically $ newTVar False
+  t1 <- newTVarIO False
+  t2 <- newTVarIO False
   forkIO $ blockedCallback [t1, t2] (fakeAction 0)
   print "Setting t1 True"
   atomically $ writeTVar t1 True
@@ -258,9 +258,9 @@ periodicNullSource period conditions = forever $ do
 testCallback2 :: IO ()
 testCallback2 = do
   -- Create enough condition variables for the scenario
-  t1 <- atomically $ newTVar False
-  t2 <- atomically $ newTVar False
-  t3 <- atomically $ newTVar False
+  t1 <- newTVarIO False
+  t2 <- newTVarIO False
+  t3 <- newTVarIO False
 
   -- Connection Map:
   -- - t1 connects source 1 to sink 1
