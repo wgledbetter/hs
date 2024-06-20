@@ -31,10 +31,15 @@ timeSource period v conditions = forkIO $ forever $ do
 
 -- Sinks -----------------------------------------------------------------------
 
-blockUntilReady :: [TVar Bool] -> STM ()
-blockUntilReady tbs = do
+blockUntilAllReady :: [TVar Bool] -> STM ()
+blockUntilAllReady tbs = do
   bs <- mapM readTVar tbs
   unless (and bs) retry
+
+blockUntilOneReady :: [TVar Bool] -> STM ()
+blockUntilOneReady tbs = do
+  bs <- mapM readTVar tbs
+  unless (or bs) retry
 
 clearStatus :: [TVar Bool] -> STM ()
 clearStatus = traverse_ (`writeTVar` False)
@@ -43,7 +48,7 @@ blockedCallback :: [TVar Bool] -> IO () -> IO ThreadId
 blockedCallback conditions action = forkIO $ forever $ do
   atomically $
     do
-      blockUntilReady conditions
+      blockUntilAllReady conditions
       clearStatus conditions
   action
 
