@@ -1,1 +1,3 @@
 # hs
+
+monorepo for learning

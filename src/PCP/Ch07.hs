@@ -277,3 +277,16 @@ testCallback2 = do
 
   -- Stall while it runs
   threadDelay 5_000_000
+
+-- And now back to your regularly scheduled programming ------------------------
+
+-- Unbounded Channels ----------------------------------------------------------
+
+-- This is starting to feel like good-old procedural programming again with these mutating MVars
+-- He compares this to multicast, but it's actually significantly different.
+-- Yes, a single writer thread can push values to multiple reader threads, but those reader threads will not get the same data.
+-- This is a fundamental design feature of MVars.
+-- The multicast that I'm looking for is multiple readers get all values sent by a writer.
+-- Oh, he does actually do that by duplicating channels.
+-- That's a lot closer to what I want, but it wouldn't allow skipping intermediate values, like with a LazyEverything sink.
+-- I see the usefulness of this though.
