@@ -1,17 +1,17 @@
 {-# LANGUAGE NumericUnderscores #-}
 
-module Argus.Scratch where
+module Scratch where
 
-import Argus.Core
 import Control.Concurrent
 import Control.Concurrent.STM
+import Core
 import Data.Time
 
 -- Utils -----------------------------------------------------------------------
 
 getPicoseconds :: Node UTCTime -> Node Integer
 getPicoseconds utc = Computation $ do
-  val <- getNodeValueSTM utc
+  val <- getNodeValue utc
   return $ diffTimeToPicoseconds $ utctDayTime val
 
 -- Tests -----------------------------------------------------------------------

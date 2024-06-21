@@ -1,0 +1,15 @@
+name: argus
+
+dependencies:
+  - base
+  - stm
+  - time
+
+executables:
+  argus:
+    main: Main.hs
+    source-dirs: .
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -O2

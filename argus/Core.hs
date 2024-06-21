@@ -1,4 +1,4 @@
-module Argus.Core where
+module Core where
 
 import Control.Concurrent
 import Control.Concurrent.STM
@@ -9,15 +9,11 @@ import Text.Printf
 
 -- Types -----------------------------------------------------------------------
 
-data Node a = Source (TVar a) | Computation (STM a)
+data Node a = Source (TVar a) | Computation (IO a)
 
-getNodeValueIO :: Node a -> IO a
-getNodeValueIO (Source tv) = readTVarIO tv
-getNodeValueIO (Computation stm) = atomically stm
-
-getNodeValueSTM :: Node a -> STM a
-getNodeValueSTM (Source tv) = readTVar tv
-getNodeValueSTM (Computation stm) = stm
+getNodeValue :: Node a -> IO a
+getNodeValue (Source tv) = readTVarIO tv
+getNodeValue (Computation io) = io
 
 -- Sources ---------------------------------------------------------------------
 
@@ -61,5 +57,5 @@ timedCallback delay action = forkIO $ forever $ do
 
 printAction :: (PrintfArg a) => Int -> Node a -> IO ()
 printAction id node = do
-  nVal <- getNodeValueIO node
+  nVal <- getNodeValue node
   printf "printAction ID (%d): Value = %d\n" id nVal
