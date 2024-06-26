@@ -217,4 +217,8 @@ I trust my idea for this, but it's gonna take a while to implement.
 ## Day 15
 
 GHCI = 506269
-stack run = 506311
+stack run = 506311 (bad b/c trailing newline)
+
+## Day 16
+
+I don't have good ideas because I'm on a couch with a laptop instead of a desk with a mouse.
