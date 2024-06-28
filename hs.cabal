@@ -51,7 +51,6 @@ library
       HB.Ch24
       HB.Morse
       LC
-      Lib
       Math.Dynamical
       Memo
       MT.HFM
@@ -60,6 +59,7 @@ library
       PCP.Ch03
       PCP.Ch07
       PCP.Ch10
+      PCP.Ch12
       Scratch.BTH1
       Scratch.BTH2
       Scratch.TTH1
@@ -81,6 +81,7 @@ library
     , checkers
     , containers
     , hspec
+    , network
     , parallel
     , random
     , raw-strings-qq
@@ -127,6 +128,7 @@ executable aoc2023
     , containers
     , hs
     , hspec
+    , network
     , parallel
     , random
     , raw-strings-qq
@@ -158,6 +160,7 @@ executable bench
     , criterion
     , hs
     , hspec
+    , network
     , parallel
     , random
     , raw-strings-qq
@@ -190,6 +193,7 @@ executable hs-exe
     , containers
     , hs
     , hspec
+    , network
     , parallel
     , random
     , raw-strings-qq
@@ -220,6 +224,7 @@ executable math
     , containers
     , hs
     , hspec
+    , network
     , parallel
     , random
     , raw-strings-qq
@@ -250,6 +255,7 @@ executable mt
     , containers
     , hs
     , hspec
+    , network
     , parallel
     , random
     , raw-strings-qq
@@ -285,6 +291,7 @@ test-suite hs-test
     , containers
     , hs
     , hspec
+    , network
     , parallel
     , random
     , raw-strings-qq

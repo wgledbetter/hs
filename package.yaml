@@ -39,6 +39,7 @@ dependencies:
   - repa
   - vector
   - stm
+  - network
 
 default-extensions:
   - TemplateHaskell
