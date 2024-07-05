@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -150,3 +151,181 @@ instance PrependIf True x ys (x ::: ys)
 instance PrependIf False x ys ys
 
 -- List Comprehensions ---------------------------------------------------------
+
+-- Analogous to (xs ++ map f xs)
+class MapAppend f xs zs | f xs -> zs where
+  mapAppend :: f -> xs -> zs
+
+instance MapAppend f Nil Nil where
+  mapAppend = undefined
+
+instance (Map f xs ys, ListConcat xs ys zs) => MapAppend f xs zs where
+  mapAppend = undefined
+
+-- Analogous to (xs ++ (map f xs) ++ (map f (map f xs)))
+class MapAppend2 f xs zs | f xs -> zs where
+  mapAppend2 :: f -> xs -> zs
+
+instance MapAppend2 f Nil Nil where
+  mapAppend2 = undefined
+
+instance (Map f xs ys, MapAppend f ys ys', ListConcat xs ys' zs) => MapAppend2 f xs zs where
+  mapAppend2 = undefined
+
+-- Analogous to (xs ++ (map f xs) ++ (map f (map f xs)) ++ (map f (map f (map f xs))))
+class MapAppend3 f xs zs | f xs -> zs where
+  mapAppend3 :: f -> xs -> zs
+
+instance MapAppend3 f Nil Nil where
+  mapAppend3 = undefined
+
+instance (Map f xs ys, MapAppend2 f ys ys', ListConcat xs ys' zs) => MapAppend3 f xs zs where
+  mapAppend3 = undefined
+
+-- Orientations ----------------------------------------------------------------
+
+-- A "function" that generates all orientations of a given cube.
+-- Since it's acting like a function, we have to specify how to Apply it.
+data Orientations
+
+instance
+  ( MapAppend Flip (c ::: Nil) fs,
+    MapAppend2 Twist fs ts,
+    MapAppend3 Rotate ts zs
+  ) =>
+  Apply Orientations c zs
+  where
+  apply = undefined
+
+-- Not Equal -------------------------------------------------------------------
+
+-- Used to compare whether the same face is visible
+class NEQ x y b | x y -> b where
+  neq :: x -> y -> b
+
+instance NEQ R R False where neq = undefined
+
+instance NEQ R G True where neq = undefined
+
+instance NEQ R B True where neq = undefined
+
+instance NEQ R W True where neq = undefined
+
+instance NEQ G R True where neq = undefined
+
+instance NEQ G G False where neq = undefined
+
+instance NEQ G B True where neq = undefined
+
+instance NEQ G W True where neq = undefined
+
+instance NEQ B R True where neq = undefined
+
+instance NEQ B G True where neq = undefined
+
+instance NEQ B B False where neq = undefined
+
+instance NEQ B W True where neq = undefined
+
+instance NEQ W R True where neq = undefined
+
+instance NEQ W G True where neq = undefined
+
+instance NEQ W B True where neq = undefined
+
+instance NEQ W W False where neq = undefined
+
+-- All -------------------------------------------------------------------------
+
+-- Really more like the "and" function
+class All l b | l -> b where
+  all :: l -> b
+
+instance All Nil True where
+  all = undefined
+
+instance All (False ::: xs) False where
+  all = undefined
+
+instance (All xs b) => All (True ::: xs) b where
+  all = undefined
+
+-- Cube Compatibility ----------------------------------------------------------
+
+class Compatible c1 c2 b | c1 c2 -> b where
+  compatible :: c1 -> c2 -> b
+
+-- Pick out the visible faces and check equality over all
+instance
+  ( NEQ f1 f2 bF,
+    NEQ r1 r2 bR,
+    NEQ b1 b2 bB,
+    NEQ l1 l2 bL,
+    All (bF ::: bR ::: bB ::: bL ::: Nil) b
+  ) =>
+  Compatible (Cube u1 f1 r1 b1 l1 d1) (Cube u2 f2 r2 b2 l2 d2) b
+  where
+  compatible = undefined
+
+-- Allowed ---------------------------------------------------------------------
+
+class Allowed c cs b | c cs -> b where
+  allowed :: c -> cs -> b
+
+instance Allowed c Nil True where
+  allowed = undefined
+
+instance
+  ( Compatible c y bC,
+    Allowed c ys bA,
+    And bC bA b
+  ) =>
+  Allowed c (y ::: ys) b
+  where
+  allowed = undefined
+
+-- Solution --------------------------------------------------------------------
+
+-- The last-minute introduction of AllowedCombinations and MatchingOrientations
+--   is very "draw the rest of the owl."
+
+class Solutions cs ss | cs -> ss where
+  solutions :: cs -> ss
+
+instance Solutions Nil (Nil ::: Nil) where
+  solutions = undefined
+
+instance
+  ( Solutions cs sols,
+    Apply Orientations c os,
+    AllowedCombinations os sols zs
+  ) =>
+  Solutions (c ::: cs) zs
+  where
+  solutions = undefined
+
+class AllowedCombinations os sols ss | os sols -> ss
+
+instance AllowedCombinations os Nil Nil
+
+instance
+  ( AllowedCombinations os sols as,
+    MatchingOrientations os s bs,
+    ListConcat as bs ss
+  ) =>
+  AllowedCombinations os (s ::: sols) ss
+
+class MatchingOrientations os sol zs | os sol -> zs
+
+instance MatchingOrientations Nil sol Nil
+
+instance
+  ( MatchingOrientations os sol as,
+    Allowed o sol b,
+    PrependIf b (o ::: sol) as zs
+  ) =>
+  MatchingOrientations (o ::: os) sol zs
+
+type Cubes = (Cube1 ::: Cube2 ::: Cube3 ::: Cube4 ::: Nil)
+
+ans = solutions (undefined :: Cubes)
