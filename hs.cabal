@@ -28,6 +28,7 @@ library
       FPPG.Ch02
       FPPG.Ch03
       FPPG.Ch04
+      Haddock
       HB.Ch02
       HB.Ch03
       HB.Ch04
@@ -49,6 +50,8 @@ library
       HB.Ch22
       HB.Ch23
       HB.Ch24
+      HB.Ch24.Pt10
+      HB.Ch24.Pt11
       HB.Morse
       LC
       Math.Dynamical
@@ -75,6 +78,7 @@ library
       TemplateHaskell
   build-depends:
       QuickCheck
+    , aeson
     , attoparsec
     , base >=4.7 && <5
     , bytestring
@@ -83,6 +87,8 @@ library
     , hspec
     , network
     , parallel
+    , parsec
+    , parsers
     , random
     , raw-strings-qq
     , repa
@@ -121,6 +127,7 @@ executable aoc2023
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -fasm -O2
   build-depends:
       QuickCheck
+    , aeson
     , attoparsec
     , base >=4.7 && <5
     , bytestring
@@ -130,6 +137,8 @@ executable aoc2023
     , hspec
     , network
     , parallel
+    , parsec
+    , parsers
     , random
     , raw-strings-qq
     , repa
@@ -152,6 +161,7 @@ executable bench
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -O2 -fasm -fforce-recomp
   build-depends:
       QuickCheck
+    , aeson
     , attoparsec
     , base >=4.7 && <5
     , bytestring
@@ -162,6 +172,8 @@ executable bench
     , hspec
     , network
     , parallel
+    , parsec
+    , parsers
     , random
     , raw-strings-qq
     , repa
@@ -186,6 +198,7 @@ executable hs-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -fasm -O2
   build-depends:
       QuickCheck
+    , aeson
     , attoparsec
     , base >=4.7 && <5
     , bytestring
@@ -195,6 +208,8 @@ executable hs-exe
     , hspec
     , network
     , parallel
+    , parsec
+    , parsers
     , random
     , raw-strings-qq
     , repa
@@ -217,6 +232,7 @@ executable math
   ghc-options: -threaded -O2
   build-depends:
       QuickCheck
+    , aeson
     , attoparsec
     , base >=4.7 && <5
     , bytestring
@@ -226,6 +242,8 @@ executable math
     , hspec
     , network
     , parallel
+    , parsec
+    , parsers
     , random
     , raw-strings-qq
     , repa
@@ -248,6 +266,7 @@ executable mt
   ghc-options: -threaded -O2
   build-depends:
       QuickCheck
+    , aeson
     , attoparsec
     , base >=4.7 && <5
     , bytestring
@@ -257,6 +276,8 @@ executable mt
     , hspec
     , network
     , parallel
+    , parsec
+    , parsers
     , random
     , raw-strings-qq
     , repa
@@ -284,6 +305,7 @@ test-suite hs-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck
+    , aeson
     , attoparsec
     , base >=4.7 && <5
     , bytestring
@@ -293,6 +315,8 @@ test-suite hs-test
     , hspec
     , network
     , parallel
+    , parsec
+    , parsers
     , random
     , raw-strings-qq
     , repa

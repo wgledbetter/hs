@@ -6,6 +6,7 @@ module HB.Ch24 where
 
 import Control.Applicative
 import Control.Monad.Fail (fail)
+import qualified Data.Attoparsec.ByteString as A
 import Data.Attoparsec.Text (parseOnly)
 import Data.ByteString (ByteString)
 import Data.Char (isAlpha)
@@ -16,6 +17,7 @@ import Data.Ratio ((%))
 import Data.String (IsString)
 import qualified Data.Text.IO as TIO
 import Test.Hspec
+import Text.Parsec (Parsec, parseTest)
 import Text.RawString.QQ -- Package: raw-strings-qq
 import Text.Trifecta
   ( CharParsing,
@@ -433,3 +435,35 @@ soManyFrameworks = do
   print $ trf badderFraction
   print $ trf goodFraction
   print $ trf bestestFraction
+
+-- Failure and Backtracking
+
+trifP :: (Show a) => Parser a -> String -> IO ()
+trifP p i = print $ parseString p mempty i
+
+parsecP :: (Show a) => Parsec String () a -> String -> IO ()
+parsecP = parseTest
+
+attoP :: (Show a) => A.Parser a -> ByteString -> IO ()
+attoP p i = print $ A.parseOnly p i
+
+nobackParse :: (Monad f, CharParsing f) => f Char
+nobackParse = (char '1' >> char '2') <|> char '3'
+
+tryParse :: (Monad f, CharParsing f) => f Char
+tryParse = try (char '1' >> char '2') <|> char '3'
+
+failBT :: IO ()
+failBT = do
+  trifP nobackParse "13"
+  putStrLn "-------------------------------------------------------------------"
+  trifP tryParse "13"
+  putStrLn "-------------------------------------------------------------------"
+  parsecP nobackParse "13"
+  putStrLn "-------------------------------------------------------------------"
+  parsecP tryParse "13"
+  putStrLn "-------------------------------------------------------------------"
+  attoP nobackParse "13"
+  putStrLn "-------------------------------------------------------------------"
+  attoP tryParse "13"
+  putStrLn "-------------------------------------------------------------------"

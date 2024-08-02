@@ -3,7 +3,6 @@ resolver:
 
 packages:
   - .
-  - argus
 
 allow-different-user: true
 

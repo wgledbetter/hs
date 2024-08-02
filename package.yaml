@@ -40,6 +40,9 @@ dependencies:
   - vector
   - stm
   - network
+  - parsec
+  - aeson
+  - parsers
 
 default-extensions:
   - TemplateHaskell
