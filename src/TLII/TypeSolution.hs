@@ -328,4 +328,4 @@ instance
 
 type Cubes = (Cube1 ::: Cube2 ::: Cube3 ::: Cube4 ::: Nil)
 
-ans = solutions (undefined :: Cubes)
+-- ans = solutions (undefined :: Cubes)
