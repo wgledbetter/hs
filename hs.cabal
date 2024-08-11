@@ -71,6 +71,7 @@ library
       TLII.BirdWadler
       TLII.TypeSolution
       TypeInterview
+      XML
   other-modules:
       Paths_hs
   hs-source-dirs:
@@ -101,6 +102,7 @@ library
     , trifecta
     , vector
     , wreq
+    , xeno
   default-language: Haskell2010
 
 executable aoc2023
@@ -151,6 +153,7 @@ executable aoc2023
     , trifecta
     , vector
     , wreq
+    , xeno
   default-language: Haskell2010
 
 executable bench
@@ -186,6 +189,7 @@ executable bench
     , trifecta
     , vector
     , wreq
+    , xeno
   default-language: Haskell2010
 
 executable hs-exe
@@ -222,6 +226,7 @@ executable hs-exe
     , trifecta
     , vector
     , wreq
+    , xeno
   default-language: Haskell2010
 
 executable math
@@ -256,6 +261,7 @@ executable math
     , trifecta
     , vector
     , wreq
+    , xeno
   default-language: Haskell2010
 
 executable mt
@@ -290,6 +296,7 @@ executable mt
     , trifecta
     , vector
     , wreq
+    , xeno
   default-language: Haskell2010
 
 test-suite hs-test
@@ -333,4 +340,5 @@ test-suite hs-test
     , trifecta
     , vector
     , wreq
+    , xeno
   default-language: Haskell2010

@@ -43,6 +43,7 @@ dependencies:
   - parsec
   - aeson
   - parsers
+  - xeno
 
 default-extensions:
   - TemplateHaskell
