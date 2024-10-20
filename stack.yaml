@@ -1,5 +1,5 @@
 resolver:
-  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/26.yaml
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/20.yaml
 
 packages:
   - .
@@ -7,3 +7,8 @@ packages:
 allow-different-user: true
 
 install-ghc: true
+
+extra-deps:
+  - lambdasound-1.2.0@sha256:af729231e525790195a6fe24efb5955e38ea95e1efcba4c997f9d34f66177f4d,4618
+  - ansi-terminal-1.0.2@sha256:1f90bb88e670ce63fbf2c9216d50857f2419582f1c6791e542c3eab97ecfd364,2897
+  - proteaaudio-0.10.1@sha256:1de76a1fc5ff15773c41f85689965455e8be770c8a88542e8ac1159c81b77868,2952

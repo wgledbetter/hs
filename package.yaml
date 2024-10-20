@@ -36,7 +36,7 @@ dependencies:
   - text
   - hspec
   - attoparsec
-  - repa
+  # - repa
   - vector
   - stm
   - network
@@ -44,6 +44,8 @@ dependencies:
   - aeson
   - parsers
   - xeno
+  - lambdasound
+  - deque
 
 default-extensions:
   - TemplateHaskell
@@ -133,7 +135,7 @@ executables:
     dependencies:
       - hs
       - parallel
-      - repa
+      # - repa
       - vector
 
   math:

@@ -3,11 +3,32 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: lambdasound-1.2.0@sha256:af729231e525790195a6fe24efb5955e38ea95e1efcba4c997f9d34f66177f4d,4618
+    pantry-tree:
+      sha256: 5bbb41309008992a4c04cd1c9a9684d1f11c990fafc88a0500908f75b1cdf24c
+      size: 1758
+  original:
+    hackage: lambdasound-1.2.0@sha256:af729231e525790195a6fe24efb5955e38ea95e1efcba4c997f9d34f66177f4d,4618
+- completed:
+    hackage: ansi-terminal-1.0.2@sha256:1f90bb88e670ce63fbf2c9216d50857f2419582f1c6791e542c3eab97ecfd364,2897
+    pantry-tree:
+      sha256: d4405abe08cf99c47f2af8534346492a5679e17a19529667b3eeddad4c0f0149
+      size: 1184
+  original:
+    hackage: ansi-terminal-1.0.2@sha256:1f90bb88e670ce63fbf2c9216d50857f2419582f1c6791e542c3eab97ecfd364,2897
+- completed:
+    hackage: proteaaudio-0.10.1@sha256:1de76a1fc5ff15773c41f85689965455e8be770c8a88542e8ac1159c81b77868,2952
+    pantry-tree:
+      sha256: fef527961487a63e3ed0f14b01807d91d1a3de0c965efe9335ed80d702693494
+      size: 1992
+  original:
+    hackage: proteaaudio-0.10.1@sha256:1de76a1fc5ff15773c41f85689965455e8be770c8a88542e8ac1159c81b77868,2952
 snapshots:
 - completed:
-    sha256: 5a59b2a405b3aba3c00188453be172b85893cab8ebc352b1ef58b0eae5d248a2
-    size: 650475
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/26.yaml
+    sha256: 5921ddc75f5dd3f197fbc32e1e5676895a8e7b971d4f82ef6b556657801dd18a
+    size: 640054
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/20.yaml
   original:
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/26.yaml
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/20.yaml

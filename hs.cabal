@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.37.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -61,7 +61,7 @@ library
       Math.RK
       Memo
       MT.HFM
-      MT.Repa
+      Noise
       PCP.Ch02
       PCP.Ch03
       PCP.Ch07
@@ -89,14 +89,15 @@ library
     , bytestring
     , checkers
     , containers
+    , deque
     , hspec
+    , lambdasound
     , network
     , parallel
     , parsec
     , parsers
     , random
     , raw-strings-qq
-    , repa
     , stm
     , template-haskell
     , text
@@ -139,15 +140,16 @@ executable aoc2023
     , bytestring
     , checkers
     , containers
+    , deque
     , hs
     , hspec
+    , lambdasound
     , network
     , parallel
     , parsec
     , parsers
     , random
     , raw-strings-qq
-    , repa
     , stm
     , template-haskell
     , text
@@ -175,15 +177,16 @@ executable bench
     , checkers
     , containers
     , criterion
+    , deque
     , hs
     , hspec
+    , lambdasound
     , network
     , parallel
     , parsec
     , parsers
     , random
     , raw-strings-qq
-    , repa
     , stm
     , template-haskell
     , text
@@ -212,15 +215,16 @@ executable hs-exe
     , bytestring
     , checkers
     , containers
+    , deque
     , hs
     , hspec
+    , lambdasound
     , network
     , parallel
     , parsec
     , parsers
     , random
     , raw-strings-qq
-    , repa
     , stm
     , template-haskell
     , text
@@ -247,15 +251,16 @@ executable math
     , bytestring
     , checkers
     , containers
+    , deque
     , hs
     , hspec
+    , lambdasound
     , network
     , parallel
     , parsec
     , parsers
     , random
     , raw-strings-qq
-    , repa
     , stm
     , template-haskell
     , text
@@ -282,15 +287,16 @@ executable mt
     , bytestring
     , checkers
     , containers
+    , deque
     , hs
     , hspec
+    , lambdasound
     , network
     , parallel
     , parsec
     , parsers
     , random
     , raw-strings-qq
-    , repa
     , stm
     , template-haskell
     , text
@@ -322,15 +328,16 @@ test-suite hs-test
     , bytestring
     , checkers
     , containers
+    , deque
     , hs
     , hspec
+    , lambdasound
     , network
     , parallel
     , parsec
     , parsers
     , random
     , raw-strings-qq
-    , repa
     , stm
     , tasty
     , tasty-hunit
