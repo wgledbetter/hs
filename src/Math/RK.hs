@@ -2,7 +2,7 @@
 
 module Math.RK where
 
-import Control.Monad.Trans.State (State, runState, state)
+import Control.Monad.Trans.State (State, execState, runState, state)
 import Data.List (find)
 
 -- Types -----------------------------------------------------------------------
@@ -19,13 +19,16 @@ data ButcherTable = ButcherTable
     o :: Int
   }
 
-newtype Stepper = Stepper {step :: Double -> SystemState -> SystemState}
+data Stepper = Stepper
+  { stepH :: Double -> SystemState -> SystemState,
+    step :: SystemState -> SystemState
+  }
 
 data AdpButcherTable = AdpButcherTable {bt :: ButcherTable, b' :: Int -> Double}
 
 newtype ErrStepper = ErrStepper {errStep :: Double -> SystemState -> (SystemState, Double)}
 
-newtype AdpStepper = AdpStepper (State SystemState AdpStepper)
+data AdpStepper = AdpStepper (State SystemState AdpStepper) Stepper
 
 -- Fixed-Step RK4 Verbatim from Wikipedia --------------------------------------
 
@@ -109,12 +112,12 @@ btDOPRI =
 
 -- Multiple Fixed-Size Steps ---------------------------------------------------
 
-mkRKStepper :: ButcherTable -> EOM -> Stepper
-mkRKStepper bt eom = Stepper {step = rk bt eom}
+mkRKStepper :: ButcherTable -> EOM -> Double -> Stepper
+mkRKStepper bt eom h = Stepper {stepH = rk bt eom, step = rk bt eom h}
 
 -- | Infinite steps
 multiFixedStep :: Stepper -> Double -> SystemState -> [SystemState]
-multiFixedStep stp h s0 = s0 : iterate (step stp h) s0
+multiFixedStep stp h s0 = s0 : iterate (stepH stp h) s0
 
 -- General Error-Estimating RK -------------------------------------------------
 
@@ -157,7 +160,10 @@ btaDOPRI =
 -- Adaptive Size Stepper -------------------------------------------------------
 
 mkRKAdpStepper :: Double -> AdpButcherTable -> EOM -> AdpStepper
-mkRKAdpStepper absTol abt@(AdpButcherTable (ButcherTable _ _ _ _ order) _) eom = AdpStepper (state $ go 1)
+mkRKAdpStepper absTol abt@(AdpButcherTable (ButcherTable _ _ _ _ order) _) eom =
+  AdpStepper
+    startState
+    (Stepper {step = execState startState, stepH = \h ss -> fst $ rke h ss})
   where
     -- This error stepper gets embedded into the adaptive stepper via the g function
     rke = rkErr abt eom
@@ -174,18 +180,25 @@ mkRKAdpStepper absTol abt@(AdpButcherTable (ButcherTable _ _ _ _ order) _) eom =
     -- This function computes a forward step that satisfies the requested tolerance and uses that information to create a new stepper containing a best guess step size.
     -- Used to bootstrap the State monad with some initial guess step size h0.
     go :: Double -> SystemState -> (AdpStepper, SystemState)
-    go h0 s0@(SystemState _ t0) = (AdpStepper (state $ go h), s1)
+    go h0 s0@(SystemState _ t0) =
+      ( AdpStepper (state $ go h) (Stepper {step = basicStepper, stepH = \h ss -> fst $ rke h ss}),
+        s1
+      )
       where
         -- Get an answer that satisfies the tolerance
         Just (s1, h, err) = find (\(_, _, err) -> abs err <= absTol) (tail $ iterate (g s0) (undefined, h0, undefined))
+        stStp = state $ go h
+        basicStepper = execState stStp
+
+    startState = state $ go 1
 
 adpStep :: AdpStepper -> SystemState -> SystemState
-adpStep (AdpStepper st) s0 = s1
+adpStep (AdpStepper ast _) s0 = s1
   where
-    (_, s1) = runState st s0
+    (_, s1) = runState ast s0
 
 -- | Infinite Steps
 multiAdpStep :: AdpStepper -> SystemState -> [SystemState]
-multiAdpStep (AdpStepper st) s0 = s0 : multiAdpStep st' s1
+multiAdpStep (AdpStepper ast _) s0 = s0 : multiAdpStep st' s1
   where
-    (st', s1) = runState st s0
+    (st', s1) = runState ast s0

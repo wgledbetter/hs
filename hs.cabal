@@ -57,6 +57,8 @@ library
       HeteroEq2
       LC
       Math.Dynamical
+      Math.Opt
+      Math.RK
       Memo
       MT.HFM
       MT.Repa
